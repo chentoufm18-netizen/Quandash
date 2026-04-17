@@ -1,0 +1,3606 @@
+{
+  "last_updated": "2026-04-17T14:17:31.841551",
+  "count": 20,
+  "data": {
+    "NZD/USD": {
+      "symbol": "NZD/USD",
+      "category": "forex",
+      "composite_score": -66.8,
+      "composite_bias": "BEARISH",
+      "cot_score": -100,
+      "eco_score": 0,
+      "sentiment_score": -67.4,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": -34454,
+      "smart_money_change": -6819,
+      "smart_money_long": 8001,
+      "smart_money_short": 42455,
+      "commercial_net": 49098,
+      "open_interest": 76952,
+      "latest_date": "260407",
+      "cftc_code": "112741",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 8001,
+            "short": 42455,
+            "net": -34454
+          },
+          "leveraged_funds": {
+            "long": 9015,
+            "short": 24840,
+            "net": -15825
+          },
+          "commercials": {
+            "long": 51879,
+            "short": 2781,
+            "net": 49098
+          },
+          "open_interest": 76952
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 6601,
+            "short": 34236,
+            "net": -27635
+          },
+          "leveraged_funds": {
+            "long": 5752,
+            "short": 23550,
+            "net": -17798
+          },
+          "commercials": {
+            "long": 50305,
+            "short": 6700,
+            "net": 43605
+          },
+          "open_interest": 70805
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 6572,
+            "short": 31584,
+            "net": -25012
+          },
+          "leveraged_funds": {
+            "long": 7461,
+            "short": 24191,
+            "net": -16730
+          },
+          "commercials": {
+            "long": 43769,
+            "short": 4053,
+            "net": 39716
+          },
+          "open_interest": 65011
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 8731,
+            "short": 30832,
+            "net": -22101
+          },
+          "leveraged_funds": {
+            "long": 5644,
+            "short": 21561,
+            "net": -15917
+          },
+          "commercials": {
+            "long": 42325,
+            "short": 6281,
+            "net": 36044
+          },
+          "open_interest": 64084
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 10660,
+            "short": 48031,
+            "net": -37371
+          },
+          "leveraged_funds": {
+            "long": 11699,
+            "short": 15865,
+            "net": -4166
+          },
+          "commercials": {
+            "long": 42017,
+            "short": 1523,
+            "net": 40494
+          },
+          "open_interest": 84215
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 12318,
+            "short": 43121,
+            "net": -30803
+          },
+          "leveraged_funds": {
+            "long": 11169,
+            "short": 21464,
+            "net": -10295
+          },
+          "commercials": {
+            "long": 41277,
+            "short": 2803,
+            "net": 38474
+          },
+          "open_interest": 79462
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 13632,
+            "short": 40554,
+            "net": -26922
+          },
+          "leveraged_funds": {
+            "long": 9811,
+            "short": 20073,
+            "net": -10262
+          },
+          "commercials": {
+            "long": 37025,
+            "short": 4328,
+            "net": 32697
+          },
+          "open_interest": 71503
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 14819,
+            "short": 40971,
+            "net": -26152
+          },
+          "leveraged_funds": {
+            "long": 9443,
+            "short": 21908,
+            "net": -12465
+          },
+          "commercials": {
+            "long": 39909,
+            "short": 4284,
+            "net": 35625
+          },
+          "open_interest": 73004
+        }
+      ],
+      "retail_long_pct": 71.2,
+      "retail_short_pct": 28.8,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "USD/CHF": {
+      "symbol": "USD/CHF",
+      "category": "forex",
+      "composite_score": 42.5,
+      "composite_bias": "BULLISH",
+      "cot_score": 66.8,
+      "eco_score": 0,
+      "sentiment_score": 36.4,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": 13646,
+      "smart_money_change": -108,
+      "smart_money_long": 15175,
+      "smart_money_short": 1529,
+      "commercial_net": -7470,
+      "open_interest": 36573,
+      "latest_date": "260407",
+      "cftc_code": "098662",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 15175,
+            "short": 1529,
+            "net": 13646
+          },
+          "leveraged_funds": {
+            "long": 9727,
+            "short": 18368,
+            "net": -8641
+          },
+          "commercials": {
+            "long": 3069,
+            "short": 10539,
+            "net": -7470
+          },
+          "open_interest": 36573
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 15073,
+            "short": 1319,
+            "net": 13754
+          },
+          "leveraged_funds": {
+            "long": 11243,
+            "short": 20075,
+            "net": -8832
+          },
+          "commercials": {
+            "long": 3142,
+            "short": 10538,
+            "net": -7396
+          },
+          "open_interest": 38735
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 13818,
+            "short": 1415,
+            "net": 12403
+          },
+          "leveraged_funds": {
+            "long": 10923,
+            "short": 17844,
+            "net": -6921
+          },
+          "commercials": {
+            "long": 3236,
+            "short": 10543,
+            "net": -7307
+          },
+          "open_interest": 36113
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 12741,
+            "short": 1984,
+            "net": 10757
+          },
+          "leveraged_funds": {
+            "long": 11169,
+            "short": 16784,
+            "net": -5615
+          },
+          "commercials": {
+            "long": 3007,
+            "short": 10548,
+            "net": -7541
+          },
+          "open_interest": 35456
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 9322,
+            "short": 2166,
+            "net": 7156
+          },
+          "leveraged_funds": {
+            "long": 8867,
+            "short": 20550,
+            "net": -11683
+          },
+          "commercials": {
+            "long": 2823,
+            "short": 778,
+            "net": 2045
+          },
+          "open_interest": 32012
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 6837,
+            "short": 5848,
+            "net": 989
+          },
+          "leveraged_funds": {
+            "long": 10139,
+            "short": 14686,
+            "net": -4547
+          },
+          "commercials": {
+            "long": 3402,
+            "short": 897,
+            "net": 2505
+          },
+          "open_interest": 29871
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 2815,
+            "short": 6364,
+            "net": -3549
+          },
+          "leveraged_funds": {
+            "long": 12120,
+            "short": 11270,
+            "net": 850
+          },
+          "commercials": {
+            "long": 3419,
+            "short": 896,
+            "net": 2523
+          },
+          "open_interest": 26218
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 2764,
+            "short": 6893,
+            "net": -4129
+          },
+          "leveraged_funds": {
+            "long": 12894,
+            "short": 11002,
+            "net": 1892
+          },
+          "commercials": {
+            "long": 3459,
+            "short": 893,
+            "net": 2566
+          },
+          "open_interest": 26596
+        }
+      ],
+      "retail_long_pct": 44.3,
+      "retail_short_pct": 55.7,
+      "retail_bias": "SHORT",
+      "crowd_extreme": false
+    },
+    "GBP/USD": {
+      "symbol": "GBP/USD",
+      "category": "forex",
+      "composite_score": -40.5,
+      "composite_bias": "BEARISH",
+      "cot_score": -63.4,
+      "eco_score": 0,
+      "sentiment_score": -35.4,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": -99460,
+      "smart_money_change": 2072,
+      "smart_money_long": 25841,
+      "smart_money_short": 125301,
+      "commercial_net": 79768,
+      "open_interest": 244191,
+      "latest_date": "260407",
+      "cftc_code": "096742",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 25841,
+            "short": 125301,
+            "net": -99460
+          },
+          "leveraged_funds": {
+            "long": 55779,
+            "short": 29246,
+            "net": 26533
+          },
+          "commercials": {
+            "long": 133276,
+            "short": 53508,
+            "net": 79768
+          },
+          "open_interest": 244191
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 23458,
+            "short": 124990,
+            "net": -101532
+          },
+          "leveraged_funds": {
+            "long": 58402,
+            "short": 28470,
+            "net": 29932
+          },
+          "commercials": {
+            "long": 132294,
+            "short": 51454,
+            "net": 80840
+          },
+          "open_interest": 243461
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 28499,
+            "short": 122962,
+            "net": -94463
+          },
+          "leveraged_funds": {
+            "long": 47450,
+            "short": 31734,
+            "net": 15716
+          },
+          "commercials": {
+            "long": 128153,
+            "short": 46144,
+            "net": 82009
+          },
+          "open_interest": 238862
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 30064,
+            "short": 126022,
+            "net": -95958
+          },
+          "leveraged_funds": {
+            "long": 46706,
+            "short": 34938,
+            "net": 11768
+          },
+          "commercials": {
+            "long": 130725,
+            "short": 41223,
+            "net": 89502
+          },
+          "open_interest": 243434
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 33647,
+            "short": 154150,
+            "net": -120503
+          },
+          "leveraged_funds": {
+            "long": 48818,
+            "short": 28716,
+            "net": 20102
+          },
+          "commercials": {
+            "long": 110682,
+            "short": 7567,
+            "net": 103115
+          },
+          "open_interest": 392591
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 28611,
+            "short": 154158,
+            "net": -125547
+          },
+          "leveraged_funds": {
+            "long": 68080,
+            "short": 33574,
+            "net": 34506
+          },
+          "commercials": {
+            "long": 105382,
+            "short": 9867,
+            "net": 95515
+          },
+          "open_interest": 269696
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 34767,
+            "short": 144925,
+            "net": -110158
+          },
+          "leveraged_funds": {
+            "long": 69164,
+            "short": 29013,
+            "net": 40151
+          },
+          "commercials": {
+            "long": 78154,
+            "short": 9188,
+            "net": 68966
+          },
+          "open_interest": 245891
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 44919,
+            "short": 138462,
+            "net": -93543
+          },
+          "leveraged_funds": {
+            "long": 74888,
+            "short": 32522,
+            "net": 42366
+          },
+          "commercials": {
+            "long": 63206,
+            "short": 17673,
+            "net": 45533
+          },
+          "open_interest": 238845
+        }
+      ],
+      "retail_long_pct": 55.2,
+      "retail_short_pct": 44.8,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "EUR/USD": {
+      "symbol": "EUR/USD",
+      "category": "forex",
+      "composite_score": 36.4,
+      "composite_bias": "BULLISH",
+      "cot_score": 48.8,
+      "eco_score": 0,
+      "sentiment_score": 48.0,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": 258050,
+      "smart_money_change": -6367,
+      "smart_money_long": 433195,
+      "smart_money_short": 175145,
+      "commercial_net": -303428,
+      "open_interest": 775043,
+      "latest_date": "260407",
+      "cftc_code": "099741",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 433195,
+            "short": 175145,
+            "net": 258050
+          },
+          "leveraged_funds": {
+            "long": 104662,
+            "short": 103780,
+            "net": 882
+          },
+          "commercials": {
+            "long": 52663,
+            "short": 356091,
+            "net": -303428
+          },
+          "open_interest": 775043
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 431246,
+            "short": 166829,
+            "net": 264417
+          },
+          "leveraged_funds": {
+            "long": 106291,
+            "short": 102344,
+            "net": 3947
+          },
+          "commercials": {
+            "long": 48543,
+            "short": 357954,
+            "net": -309411
+          },
+          "open_interest": 774237
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 446373,
+            "short": 158433,
+            "net": 287940
+          },
+          "leveraged_funds": {
+            "long": 97985,
+            "short": 111523,
+            "net": -13538
+          },
+          "commercials": {
+            "long": 39995,
+            "short": 357133,
+            "net": -317138
+          },
+          "open_interest": 764691
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 452180,
+            "short": 157642,
+            "net": 294538
+          },
+          "leveraged_funds": {
+            "long": 106918,
+            "short": 113870,
+            "net": -6952
+          },
+          "commercials": {
+            "long": 29602,
+            "short": 360018,
+            "net": -330416
+          },
+          "open_interest": 755789
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 509748,
+            "short": 143449,
+            "net": 366299
+          },
+          "leveraged_funds": {
+            "long": 105592,
+            "short": 100361,
+            "net": 5231
+          },
+          "commercials": {
+            "long": 62742,
+            "short": 481320,
+            "net": -418578
+          },
+          "open_interest": 969374
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 519444,
+            "short": 149172,
+            "net": 370272
+          },
+          "leveraged_funds": {
+            "long": 128443,
+            "short": 98811,
+            "net": 29632
+          },
+          "commercials": {
+            "long": 56431,
+            "short": 511111,
+            "net": -454680
+          },
+          "open_interest": 913289
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 533702,
+            "short": 138401,
+            "net": 395301
+          },
+          "leveraged_funds": {
+            "long": 120964,
+            "short": 84167,
+            "net": 36797
+          },
+          "commercials": {
+            "long": 55362,
+            "short": 555121,
+            "net": -499759
+          },
+          "open_interest": 911287
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 549252,
+            "short": 135539,
+            "net": 413713
+          },
+          "leveraged_funds": {
+            "long": 126502,
+            "short": 82953,
+            "net": 43549
+          },
+          "commercials": {
+            "long": 54606,
+            "short": 579530,
+            "net": -524924
+          },
+          "open_interest": 916813
+        }
+      ],
+      "retail_long_pct": 38.5,
+      "retail_short_pct": 61.5,
+      "retail_bias": "SHORT",
+      "crowd_extreme": false
+    },
+    "S&P 500": {
+      "symbol": "S&P 500",
+      "category": "index",
+      "composite_score": 35.6,
+      "composite_bias": "BULLISH",
+      "cot_score": 54.7,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 10464,
+      "smart_money_change": -1530,
+      "smart_money_long": 11741,
+      "smart_money_short": 1277,
+      "commercial_net": -11843,
+      "open_interest": 17800,
+      "latest_date": "260407",
+      "cftc_code": "13874P",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 11741,
+            "short": 1277,
+            "net": 10464
+          },
+          "leveraged_funds": {
+            "long": 1277,
+            "short": 850,
+            "net": 427
+          },
+          "commercials": {
+            "long": 3410,
+            "short": 15253,
+            "net": -11843
+          },
+          "open_interest": 17800
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 11994,
+            "short": 0,
+            "net": 11994
+          },
+          "leveraged_funds": {
+            "long": 0,
+            "short": 710,
+            "net": -710
+          },
+          "commercials": {
+            "long": 3305,
+            "short": 15683,
+            "net": -12378
+          },
+          "open_interest": 16629
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 16286,
+            "short": 0,
+            "net": 16286
+          },
+          "leveraged_funds": {
+            "long": 485,
+            "short": 0,
+            "net": 485
+          },
+          "commercials": {
+            "long": 2021,
+            "short": 19625,
+            "net": -17604
+          },
+          "open_interest": 19954
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 19030,
+            "short": 0,
+            "net": 19030
+          },
+          "leveraged_funds": {
+            "long": 697,
+            "short": 2043,
+            "net": -1346
+          },
+          "commercials": {
+            "long": 2184,
+            "short": 20138,
+            "net": -17954
+          },
+          "open_interest": 32162
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 18814,
+            "short": 0,
+            "net": 18814
+          },
+          "leveraged_funds": {
+            "long": 731,
+            "short": 2202,
+            "net": -1471
+          },
+          "commercials": {
+            "long": 2146,
+            "short": 19806,
+            "net": -17660
+          },
+          "open_interest": 22647
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 18391,
+            "short": 0,
+            "net": 18391
+          },
+          "leveraged_funds": {
+            "long": 793,
+            "short": 2622,
+            "net": -1829
+          },
+          "commercials": {
+            "long": 2448,
+            "short": 19321,
+            "net": -16873
+          },
+          "open_interest": 22582
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 18473,
+            "short": 0,
+            "net": 18473
+          },
+          "leveraged_funds": {
+            "long": 806,
+            "short": 2690,
+            "net": -1884
+          },
+          "commercials": {
+            "long": 2448,
+            "short": 19319,
+            "net": -16871
+          },
+          "open_interest": 22597
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 18067,
+            "short": 0,
+            "net": 18067
+          },
+          "leveraged_funds": {
+            "long": 819,
+            "short": 2832,
+            "net": -2013
+          },
+          "commercials": {
+            "long": 2424,
+            "short": 18723,
+            "net": -16299
+          },
+          "open_interest": 22083
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "USD/CAD": {
+      "symbol": "USD/CAD",
+      "category": "forex",
+      "composite_score": -30.0,
+      "composite_bias": "BEARISH",
+      "cot_score": -38.9,
+      "eco_score": 0,
+      "sentiment_score": -42.4,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": -15897,
+      "smart_money_change": -20245,
+      "smart_money_long": 65759,
+      "smart_money_short": 81656,
+      "commercial_net": 50581,
+      "open_interest": 240735,
+      "latest_date": "260407",
+      "cftc_code": "090741",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 65759,
+            "short": 81656,
+            "net": -15897
+          },
+          "leveraged_funds": {
+            "long": 31961,
+            "short": 76105,
+            "net": -44144
+          },
+          "commercials": {
+            "long": 82871,
+            "short": 32290,
+            "net": 50581
+          },
+          "open_interest": 240735
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 64749,
+            "short": 60401,
+            "net": 4348
+          },
+          "leveraged_funds": {
+            "long": 28325,
+            "short": 71235,
+            "net": -42910
+          },
+          "commercials": {
+            "long": 64103,
+            "short": 36157,
+            "net": 27946
+          },
+          "open_interest": 217085
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 67647,
+            "short": 41518,
+            "net": 26129
+          },
+          "leveraged_funds": {
+            "long": 26751,
+            "short": 58451,
+            "net": -31700
+          },
+          "commercials": {
+            "long": 30119,
+            "short": 37684,
+            "net": -7565
+          },
+          "open_interest": 182798
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 75094,
+            "short": 45026,
+            "net": 30068
+          },
+          "leveraged_funds": {
+            "long": 26293,
+            "short": 64145,
+            "net": -37852
+          },
+          "commercials": {
+            "long": 44757,
+            "short": 54576,
+            "net": -9819
+          },
+          "open_interest": 247753
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 105105,
+            "short": 35593,
+            "net": 69512
+          },
+          "leveraged_funds": {
+            "long": 28252,
+            "short": 65411,
+            "net": -37159
+          },
+          "commercials": {
+            "long": 34267,
+            "short": 86568,
+            "net": -52301
+          },
+          "open_interest": 288392
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 104490,
+            "short": 42908,
+            "net": 61582
+          },
+          "leveraged_funds": {
+            "long": 24944,
+            "short": 66315,
+            "net": -41371
+          },
+          "commercials": {
+            "long": 39154,
+            "short": 75066,
+            "net": -35912
+          },
+          "open_interest": 232433
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 104700,
+            "short": 41574,
+            "net": 63126
+          },
+          "leveraged_funds": {
+            "long": 24880,
+            "short": 58981,
+            "net": -34101
+          },
+          "commercials": {
+            "long": 34705,
+            "short": 82041,
+            "net": -47336
+          },
+          "open_interest": 222562
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 107608,
+            "short": 39044,
+            "net": 68564
+          },
+          "leveraged_funds": {
+            "long": 22004,
+            "short": 64038,
+            "net": -42034
+          },
+          "commercials": {
+            "long": 31674,
+            "short": 79347,
+            "net": -47673
+          },
+          "open_interest": 218415
+        }
+      ],
+      "retail_long_pct": 58.7,
+      "retail_short_pct": 41.3,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "Nasdaq 100": {
+      "symbol": "Nasdaq 100",
+      "category": "index",
+      "composite_score": 21.4,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 32.9,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 57581,
+      "smart_money_change": -69,
+      "smart_money_long": 94617,
+      "smart_money_short": 37036,
+      "commercial_net": -21127,
+      "open_interest": 246794,
+      "latest_date": "260407",
+      "cftc_code": "209742",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 94617,
+            "short": 37036,
+            "net": 57581
+          },
+          "leveraged_funds": {
+            "long": 47521,
+            "short": 86349,
+            "net": -38828
+          },
+          "commercials": {
+            "long": 52605,
+            "short": 73732,
+            "net": -21127
+          },
+          "open_interest": 246794
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 96769,
+            "short": 39119,
+            "net": 57650
+          },
+          "leveraged_funds": {
+            "long": 47382,
+            "short": 84485,
+            "net": -37103
+          },
+          "commercials": {
+            "long": 47832,
+            "short": 75585,
+            "net": -27753
+          },
+          "open_interest": 245322
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 91326,
+            "short": 41056,
+            "net": 50270
+          },
+          "leveraged_funds": {
+            "long": 47003,
+            "short": 86382,
+            "net": -39379
+          },
+          "commercials": {
+            "long": 46512,
+            "short": 65954,
+            "net": -19442
+          },
+          "open_interest": 235906
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 96720,
+            "short": 36469,
+            "net": 60251
+          },
+          "leveraged_funds": {
+            "long": 51381,
+            "short": 82843,
+            "net": -31462
+          },
+          "commercials": {
+            "long": 48890,
+            "short": 82853,
+            "net": -33963
+          },
+          "open_interest": 300943
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 100576,
+            "short": 36155,
+            "net": 64421
+          },
+          "leveraged_funds": {
+            "long": 53057,
+            "short": 78224,
+            "net": -25167
+          },
+          "commercials": {
+            "long": 46264,
+            "short": 86931,
+            "net": -40667
+          },
+          "open_interest": 259842
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 102985,
+            "short": 35402,
+            "net": 67583
+          },
+          "leveraged_funds": {
+            "long": 55905,
+            "short": 77694,
+            "net": -21789
+          },
+          "commercials": {
+            "long": 51171,
+            "short": 96563,
+            "net": -45392
+          },
+          "open_interest": 273307
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 106213,
+            "short": 36919,
+            "net": 69294
+          },
+          "leveraged_funds": {
+            "long": 56133,
+            "short": 72687,
+            "net": -16554
+          },
+          "commercials": {
+            "long": 48059,
+            "short": 108357,
+            "net": -60298
+          },
+          "open_interest": 270599
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 108770,
+            "short": 34929,
+            "net": 73841
+          },
+          "leveraged_funds": {
+            "long": 63852,
+            "short": 73168,
+            "net": -9316
+          },
+          "commercials": {
+            "long": 39131,
+            "short": 112852,
+            "net": -73721
+          },
+          "open_interest": 272951
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Bitcoin": {
+      "symbol": "Bitcoin",
+      "category": "crypto",
+      "composite_score": 16.1,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 24.8,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 4573,
+      "smart_money_change": -231,
+      "smart_money_long": 6022,
+      "smart_money_short": 1449,
+      "commercial_net": 3726,
+      "open_interest": 22308,
+      "latest_date": "260407",
+      "cftc_code": "133741",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 6022,
+            "short": 1449,
+            "net": 4573
+          },
+          "leveraged_funds": {
+            "long": 3601,
+            "short": 12028,
+            "net": -8427
+          },
+          "commercials": {
+            "long": 5959,
+            "short": 2233,
+            "net": 3726
+          },
+          "open_interest": 22308
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 5965,
+            "short": 1161,
+            "net": 4804
+          },
+          "leveraged_funds": {
+            "long": 2991,
+            "short": 11043,
+            "net": -8052
+          },
+          "commercials": {
+            "long": 6014,
+            "short": 2148,
+            "net": 3866
+          },
+          "open_interest": 20631
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 6219,
+            "short": 1151,
+            "net": 5068
+          },
+          "leveraged_funds": {
+            "long": 3814,
+            "short": 12165,
+            "net": -8351
+          },
+          "commercials": {
+            "long": 5904,
+            "short": 2095,
+            "net": 3809
+          },
+          "open_interest": 23268
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 6954,
+            "short": 1068,
+            "net": 5886
+          },
+          "leveraged_funds": {
+            "long": 2530,
+            "short": 13390,
+            "net": -10860
+          },
+          "commercials": {
+            "long": 6302,
+            "short": 2257,
+            "net": 4045
+          },
+          "open_interest": 23807
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 6875,
+            "short": 984,
+            "net": 5891
+          },
+          "leveraged_funds": {
+            "long": 3058,
+            "short": 12737,
+            "net": -9679
+          },
+          "commercials": {
+            "long": 5842,
+            "short": 2329,
+            "net": 3513
+          },
+          "open_interest": 21047
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 7154,
+            "short": 1129,
+            "net": 6025
+          },
+          "leveraged_funds": {
+            "long": 3138,
+            "short": 12333,
+            "net": -9195
+          },
+          "commercials": {
+            "long": 5975,
+            "short": 2332,
+            "net": 3643
+          },
+          "open_interest": 20302
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 6662,
+            "short": 944,
+            "net": 5718
+          },
+          "leveraged_funds": {
+            "long": 4124,
+            "short": 12360,
+            "net": -8236
+          },
+          "commercials": {
+            "long": 5763,
+            "short": 2612,
+            "net": 3151
+          },
+          "open_interest": 22919
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 6957,
+            "short": 1019,
+            "net": 5938
+          },
+          "leveraged_funds": {
+            "long": 3954,
+            "short": 12830,
+            "net": -8876
+          },
+          "commercials": {
+            "long": 5821,
+            "short": 2570,
+            "net": 3251
+          },
+          "open_interest": 23335
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Soybeans": {
+      "symbol": "Soybeans",
+      "category": "commodity",
+      "composite_score": 15.3,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 23.5,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 181305,
+      "smart_money_change": -22703,
+      "smart_money_long": 220334,
+      "smart_money_short": 39029,
+      "commercial_net": -288059,
+      "open_interest": 999742,
+      "latest_date": "260407",
+      "cftc_code": "005602",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 220334,
+            "short": 39029,
+            "net": 181305
+          },
+          "swap_dealers": {
+            "long": 163341,
+            "short": 52454,
+            "net": 110887
+          },
+          "commercials": {
+            "long": 281521,
+            "short": 569580,
+            "net": -288059
+          },
+          "open_interest": 999742
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 234120,
+            "short": 30112,
+            "net": 204008
+          },
+          "swap_dealers": {
+            "long": 160149,
+            "short": 53691,
+            "net": 106458
+          },
+          "commercials": {
+            "long": 273502,
+            "short": 574405,
+            "net": -300903
+          },
+          "open_interest": 981250
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 227533,
+            "short": 36183,
+            "net": 191350
+          },
+          "swap_dealers": {
+            "long": 162895,
+            "short": 50603,
+            "net": 112292
+          },
+          "commercials": {
+            "long": 267045,
+            "short": 561605,
+            "net": -294560
+          },
+          "open_interest": 959188
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 235016,
+            "short": 39795,
+            "net": 195221
+          },
+          "swap_dealers": {
+            "long": 158086,
+            "short": 51691,
+            "net": 106395
+          },
+          "commercials": {
+            "long": 262475,
+            "short": 559371,
+            "net": -296896
+          },
+          "open_interest": 980259
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 253566,
+            "short": 42112,
+            "net": 211454
+          },
+          "swap_dealers": {
+            "long": 157893,
+            "short": 51353,
+            "net": 106540
+          },
+          "commercials": {
+            "long": 260190,
+            "short": 562345,
+            "net": -302155
+          },
+          "open_interest": 1016277
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 235483,
+            "short": 47992,
+            "net": 187491
+          },
+          "swap_dealers": {
+            "long": 157453,
+            "short": 48859,
+            "net": 108594
+          },
+          "commercials": {
+            "long": 244080,
+            "short": 541533,
+            "net": -297453
+          },
+          "open_interest": 987365
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 212701,
+            "short": 41309,
+            "net": 171392
+          },
+          "swap_dealers": {
+            "long": 148561,
+            "short": 49637,
+            "net": 98924
+          },
+          "commercials": {
+            "long": 261105,
+            "short": 535557,
+            "net": -274452
+          },
+          "open_interest": 959299
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 208613,
+            "short": 49632,
+            "net": 158981
+          },
+          "swap_dealers": {
+            "long": 153961,
+            "short": 47998,
+            "net": 105963
+          },
+          "commercials": {
+            "long": 291943,
+            "short": 555677,
+            "net": -263734
+          },
+          "open_interest": 984660
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "USD/JPY": {
+      "symbol": "USD/JPY",
+      "category": "forex",
+      "composite_score": -15.1,
+      "composite_bias": "NEUTRAL",
+      "cot_score": -18.0,
+      "eco_score": 0,
+      "sentiment_score": -24.2,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": -15945,
+      "smart_money_change": -12300,
+      "smart_money_long": 60061,
+      "smart_money_short": 76006,
+      "commercial_net": 31868,
+      "open_interest": 349373,
+      "latest_date": "260407",
+      "cftc_code": "097741",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 60061,
+            "short": 76006,
+            "net": -15945
+          },
+          "leveraged_funds": {
+            "long": 76763,
+            "short": 127873,
+            "net": -51110
+          },
+          "commercials": {
+            "long": 67943,
+            "short": 36075,
+            "net": 31868
+          },
+          "open_interest": 349373
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 63211,
+            "short": 66856,
+            "net": -3645
+          },
+          "leveraged_funds": {
+            "long": 77232,
+            "short": 123414,
+            "net": -46182
+          },
+          "commercials": {
+            "long": 65995,
+            "short": 52624,
+            "net": 13371
+          },
+          "open_interest": 345276
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 58266,
+            "short": 64516,
+            "net": -6250
+          },
+          "leveraged_funds": {
+            "long": 67921,
+            "short": 122773,
+            "net": -54852
+          },
+          "commercials": {
+            "long": 60117,
+            "short": 42836,
+            "net": 17281
+          },
+          "open_interest": 328210
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 67607,
+            "short": 68046,
+            "net": -439
+          },
+          "leveraged_funds": {
+            "long": 69103,
+            "short": 134532,
+            "net": -65429
+          },
+          "commercials": {
+            "long": 61703,
+            "short": 31604,
+            "net": 30099
+          },
+          "open_interest": 326688
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 65494,
+            "short": 62663,
+            "net": 2831
+          },
+          "leveraged_funds": {
+            "long": 77546,
+            "short": 126765,
+            "net": -49219
+          },
+          "commercials": {
+            "long": 88905,
+            "short": 81349,
+            "net": 7556
+          },
+          "open_interest": 427718
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 70024,
+            "short": 52120,
+            "net": 17904
+          },
+          "leveraged_funds": {
+            "long": 88766,
+            "short": 122991,
+            "net": -34225
+          },
+          "commercials": {
+            "long": 56389,
+            "short": 90527,
+            "net": -34138
+          },
+          "open_interest": 416977
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 75219,
+            "short": 44247,
+            "net": 30972
+          },
+          "leveraged_funds": {
+            "long": 87174,
+            "short": 113491,
+            "net": -26317
+          },
+          "commercials": {
+            "long": 36865,
+            "short": 107263,
+            "net": -70398
+          },
+          "open_interest": 369721
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 76665,
+            "short": 36119,
+            "net": 40546
+          },
+          "leveraged_funds": {
+            "long": 82783,
+            "short": 112104,
+            "net": -29321
+          },
+          "commercials": {
+            "long": 29223,
+            "short": 110160,
+            "net": -80937
+          },
+          "open_interest": 354328
+        }
+      ],
+      "retail_long_pct": 62.1,
+      "retail_short_pct": 37.9,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "Corn": {
+      "symbol": "Corn",
+      "category": "commodity",
+      "composite_score": 10.1,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 15.6,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 210976,
+      "smart_money_change": -46976,
+      "smart_money_long": 311210,
+      "smart_money_short": 100234,
+      "commercial_net": -529490,
+      "open_interest": 1816790,
+      "latest_date": "260407",
+      "cftc_code": "002602",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 311210,
+            "short": 100234,
+            "net": 210976
+          },
+          "swap_dealers": {
+            "long": 325085,
+            "short": 28564,
+            "net": 296521
+          },
+          "commercials": {
+            "long": 395241,
+            "short": 924731,
+            "net": -529490
+          },
+          "open_interest": 1816790
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 344768,
+            "short": 86816,
+            "net": 257952
+          },
+          "swap_dealers": {
+            "long": 327969,
+            "short": 29252,
+            "net": 298717
+          },
+          "commercials": {
+            "long": 402935,
+            "short": 975295,
+            "net": -572360
+          },
+          "open_interest": 1826697
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 363377,
+            "short": 83747,
+            "net": 279630
+          },
+          "swap_dealers": {
+            "long": 328861,
+            "short": 29565,
+            "net": 299296
+          },
+          "commercials": {
+            "long": 387573,
+            "short": 1001091,
+            "net": -613518
+          },
+          "open_interest": 1796424
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 343658,
+            "short": 112770,
+            "net": 230888
+          },
+          "swap_dealers": {
+            "long": 335423,
+            "short": 27172,
+            "net": 308251
+          },
+          "commercials": {
+            "long": 391778,
+            "short": 955652,
+            "net": -563874
+          },
+          "open_interest": 1773499
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 330320,
+            "short": 131516,
+            "net": 198804
+          },
+          "swap_dealers": {
+            "long": 330822,
+            "short": 25948,
+            "net": 304874
+          },
+          "commercials": {
+            "long": 394147,
+            "short": 908203,
+            "net": -514056
+          },
+          "open_interest": 1723308
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 239232,
+            "short": 186989,
+            "net": 52243
+          },
+          "swap_dealers": {
+            "long": 328411,
+            "short": 23139,
+            "net": 305272
+          },
+          "commercials": {
+            "long": 394825,
+            "short": 759879,
+            "net": -365054
+          },
+          "open_interest": 1617461
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 219988,
+            "short": 233222,
+            "net": -13234
+          },
+          "swap_dealers": {
+            "long": 318561,
+            "short": 19421,
+            "net": 299140
+          },
+          "commercials": {
+            "long": 436218,
+            "short": 722903,
+            "net": -286685
+          },
+          "open_interest": 1656135
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 209903,
+            "short": 252216,
+            "net": -42313
+          },
+          "swap_dealers": {
+            "long": 291416,
+            "short": 19605,
+            "net": 271811
+          },
+          "commercials": {
+            "long": 496068,
+            "short": 741889,
+            "net": -245821
+          },
+          "open_interest": 1779922
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Copper": {
+      "symbol": "Copper",
+      "category": "commodity",
+      "composite_score": -9.4,
+      "composite_bias": "NEUTRAL",
+      "cot_score": -14.5,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": -12616,
+      "smart_money_change": -2484,
+      "smart_money_long": 29761,
+      "smart_money_short": 42377,
+      "commercial_net": -15774,
+      "open_interest": 204934,
+      "latest_date": "260407",
+      "cftc_code": "073732",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 29761,
+            "short": 42377,
+            "net": -12616
+          },
+          "swap_dealers": {
+            "long": 42777,
+            "short": 4804,
+            "net": 37973
+          },
+          "commercials": {
+            "long": 52627,
+            "short": 68401,
+            "net": -15774
+          },
+          "open_interest": 204934
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 30125,
+            "short": 40257,
+            "net": -10132
+          },
+          "swap_dealers": {
+            "long": 42442,
+            "short": 4777,
+            "net": 37665
+          },
+          "commercials": {
+            "long": 50578,
+            "short": 68877,
+            "net": -18299
+          },
+          "open_interest": 203517
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 29618,
+            "short": 38732,
+            "net": -9114
+          },
+          "swap_dealers": {
+            "long": 42260,
+            "short": 4315,
+            "net": 37945
+          },
+          "commercials": {
+            "long": 48105,
+            "short": 66234,
+            "net": -18129
+          },
+          "open_interest": 194510
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 29425,
+            "short": 36529,
+            "net": -7104
+          },
+          "swap_dealers": {
+            "long": 42747,
+            "short": 3704,
+            "net": 39043
+          },
+          "commercials": {
+            "long": 45622,
+            "short": 67174,
+            "net": -21552
+          },
+          "open_interest": 189306
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 30965,
+            "short": 38691,
+            "net": -7726
+          },
+          "swap_dealers": {
+            "long": 41917,
+            "short": 3790,
+            "net": 38127
+          },
+          "commercials": {
+            "long": 46523,
+            "short": 65604,
+            "net": -19081
+          },
+          "open_interest": 192004
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 31673,
+            "short": 35760,
+            "net": -4087
+          },
+          "swap_dealers": {
+            "long": 37553,
+            "short": 2335,
+            "net": 35218
+          },
+          "commercials": {
+            "long": 46371,
+            "short": 65109,
+            "net": -18738
+          },
+          "open_interest": 191812
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 27536,
+            "short": 34452,
+            "net": -6916
+          },
+          "swap_dealers": {
+            "long": 34980,
+            "short": 3162,
+            "net": 31818
+          },
+          "commercials": {
+            "long": 38666,
+            "short": 58377,
+            "net": -19711
+          },
+          "open_interest": 173446
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 21141,
+            "short": 33015,
+            "net": -11874
+          },
+          "swap_dealers": {
+            "long": 31607,
+            "short": 2147,
+            "net": 29460
+          },
+          "commercials": {
+            "long": 37230,
+            "short": 49531,
+            "net": -12301
+          },
+          "open_interest": 154642
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Dow Jones": {
+      "symbol": "Dow Jones",
+      "category": "index",
+      "composite_score": -9.2,
+      "composite_bias": "NEUTRAL",
+      "cot_score": -14.1,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 583,
+      "smart_money_change": -3573,
+      "smart_money_long": 10666,
+      "smart_money_short": 10083,
+      "commercial_net": 3415,
+      "open_interest": 68557,
+      "latest_date": "260407",
+      "cftc_code": "124603",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 10666,
+            "short": 10083,
+            "net": 583
+          },
+          "leveraged_funds": {
+            "long": 8684,
+            "short": 16090,
+            "net": -7406
+          },
+          "commercials": {
+            "long": 34264,
+            "short": 30849,
+            "net": 3415
+          },
+          "open_interest": 68557
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 12752,
+            "short": 8596,
+            "net": 4156
+          },
+          "leveraged_funds": {
+            "long": 8264,
+            "short": 15910,
+            "net": -7646
+          },
+          "commercials": {
+            "long": 31473,
+            "short": 31919,
+            "net": -446
+          },
+          "open_interest": 68213
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 11684,
+            "short": 10170,
+            "net": 1514
+          },
+          "leveraged_funds": {
+            "long": 11214,
+            "short": 14273,
+            "net": -3059
+          },
+          "commercials": {
+            "long": 29843,
+            "short": 31906,
+            "net": -2063
+          },
+          "open_interest": 67922
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 11014,
+            "short": 7075,
+            "net": 3939
+          },
+          "leveraged_funds": {
+            "long": 20997,
+            "short": 19684,
+            "net": 1313
+          },
+          "commercials": {
+            "long": 24310,
+            "short": 32649,
+            "net": -8339
+          },
+          "open_interest": 91467
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 11720,
+            "short": 11367,
+            "net": 353
+          },
+          "leveraged_funds": {
+            "long": 19620,
+            "short": 17705,
+            "net": 1915
+          },
+          "commercials": {
+            "long": 24038,
+            "short": 28032,
+            "net": -3994
+          },
+          "open_interest": 71187
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 12697,
+            "short": 14782,
+            "net": -2085
+          },
+          "leveraged_funds": {
+            "long": 19872,
+            "short": 18885,
+            "net": 987
+          },
+          "commercials": {
+            "long": 23768,
+            "short": 24465,
+            "net": -697
+          },
+          "open_interest": 71894
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 14689,
+            "short": 10285,
+            "net": 4404
+          },
+          "leveraged_funds": {
+            "long": 16536,
+            "short": 21493,
+            "net": -4957
+          },
+          "commercials": {
+            "long": 22407,
+            "short": 25322,
+            "net": -2915
+          },
+          "open_interest": 69944
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 16080,
+            "short": 11009,
+            "net": 5071
+          },
+          "leveraged_funds": {
+            "long": 15039,
+            "short": 22791,
+            "net": -7752
+          },
+          "commercials": {
+            "long": 21965,
+            "short": 22286,
+            "net": -321
+          },
+          "open_interest": 68377
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Natural Gas": {
+      "symbol": "Natural Gas",
+      "category": "commodity",
+      "composite_score": -8.4,
+      "composite_bias": "NEUTRAL",
+      "cot_score": -12.9,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": -86033,
+      "smart_money_change": -18417,
+      "smart_money_long": 157461,
+      "smart_money_short": 243494,
+      "commercial_net": -9428,
+      "open_interest": 1558863,
+      "latest_date": "260407",
+      "cftc_code": "023651",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 157461,
+            "short": 243494,
+            "net": -86033
+          },
+          "swap_dealers": {
+            "long": 206458,
+            "short": 34943,
+            "net": 171515
+          },
+          "commercials": {
+            "long": 232592,
+            "short": 242020,
+            "net": -9428
+          },
+          "open_interest": 1558863
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 149348,
+            "short": 216964,
+            "net": -67616
+          },
+          "swap_dealers": {
+            "long": 204681,
+            "short": 39003,
+            "net": 165678
+          },
+          "commercials": {
+            "long": 229046,
+            "short": 246296,
+            "net": -17250
+          },
+          "open_interest": 1514508
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 161226,
+            "short": 215381,
+            "net": -54155
+          },
+          "swap_dealers": {
+            "long": 204821,
+            "short": 41163,
+            "net": 163658
+          },
+          "commercials": {
+            "long": 229550,
+            "short": 240460,
+            "net": -10910
+          },
+          "open_interest": 1504052
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 172794,
+            "short": 217422,
+            "net": -44628
+          },
+          "swap_dealers": {
+            "long": 205478,
+            "short": 44017,
+            "net": 161461
+          },
+          "commercials": {
+            "long": 265310,
+            "short": 269365,
+            "net": -4055
+          },
+          "open_interest": 1560291
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 164388,
+            "short": 227370,
+            "net": -62982
+          },
+          "swap_dealers": {
+            "long": 205065,
+            "short": 49193,
+            "net": 155872
+          },
+          "commercials": {
+            "long": 278302,
+            "short": 270002,
+            "net": 8300
+          },
+          "open_interest": 1565341
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 167244,
+            "short": 243496,
+            "net": -76252
+          },
+          "swap_dealers": {
+            "long": 214994,
+            "short": 49031,
+            "net": 165963
+          },
+          "commercials": {
+            "long": 268795,
+            "short": 250398,
+            "net": 18397
+          },
+          "open_interest": 1606292
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 154403,
+            "short": 230278,
+            "net": -75875
+          },
+          "swap_dealers": {
+            "long": 201989,
+            "short": 49180,
+            "net": 152809
+          },
+          "commercials": {
+            "long": 276131,
+            "short": 245759,
+            "net": 30372
+          },
+          "open_interest": 1619531
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 163115,
+            "short": 189880,
+            "net": -26765
+          },
+          "swap_dealers": {
+            "long": 187642,
+            "short": 48538,
+            "net": 139104
+          },
+          "commercials": {
+            "long": 288953,
+            "short": 253259,
+            "net": 35694
+          },
+          "open_interest": 1613556
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Crude Oil WTI": {
+      "symbol": "Crude Oil WTI",
+      "category": "commodity",
+      "composite_score": 4.1,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 6.3,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": 78700,
+      "smart_money_change": 5353,
+      "smart_money_long": 186768,
+      "smart_money_short": 108068,
+      "commercial_net": 293113,
+      "open_interest": 2037857,
+      "latest_date": "260407",
+      "cftc_code": "067651",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 186768,
+            "short": 108068,
+            "net": 78700
+          },
+          "swap_dealers": {
+            "long": 117760,
+            "short": 641339,
+            "net": -523579
+          },
+          "commercials": {
+            "long": 647011,
+            "short": 353898,
+            "net": 293113
+          },
+          "open_interest": 2037857
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 177780,
+            "short": 104433,
+            "net": 73347
+          },
+          "swap_dealers": {
+            "long": 115012,
+            "short": 647831,
+            "net": -532819
+          },
+          "commercials": {
+            "long": 642912,
+            "short": 355184,
+            "net": 287728
+          },
+          "open_interest": 2030970
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 181139,
+            "short": 86803,
+            "net": 94336
+          },
+          "swap_dealers": {
+            "long": 112375,
+            "short": 646673,
+            "net": -534298
+          },
+          "commercials": {
+            "long": 625076,
+            "short": 357788,
+            "net": 267288
+          },
+          "open_interest": 2002065
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 189353,
+            "short": 92982,
+            "net": 96371
+          },
+          "swap_dealers": {
+            "long": 128442,
+            "short": 640467,
+            "net": -512025
+          },
+          "commercials": {
+            "long": 636578,
+            "short": 387182,
+            "net": 249396
+          },
+          "open_interest": 2081576
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 189998,
+            "short": 97876,
+            "net": 92122
+          },
+          "swap_dealers": {
+            "long": 134059,
+            "short": 623064,
+            "net": -489005
+          },
+          "commercials": {
+            "long": 599864,
+            "short": 387306,
+            "net": 212558
+          },
+          "open_interest": 2051321
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 187335,
+            "short": 118950,
+            "net": 68385
+          },
+          "swap_dealers": {
+            "long": 147484,
+            "short": 548480,
+            "net": -400996
+          },
+          "commercials": {
+            "long": 587033,
+            "short": 408364,
+            "net": 178669
+          },
+          "open_interest": 2073033
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 193433,
+            "short": 125733,
+            "net": 67700
+          },
+          "swap_dealers": {
+            "long": 142203,
+            "short": 489749,
+            "net": -347546
+          },
+          "commercials": {
+            "long": 569516,
+            "short": 438753,
+            "net": 130763
+          },
+          "open_interest": 2102705
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 183954,
+            "short": 120169,
+            "net": 63785
+          },
+          "swap_dealers": {
+            "long": 134366,
+            "short": 472326,
+            "net": -337960
+          },
+          "commercials": {
+            "long": 600074,
+            "short": 443743,
+            "net": 156331
+          },
+          "open_interest": 2087493
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Gold": {
+      "symbol": "Gold",
+      "category": "commodity",
+      "composite_score": 3.7,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 35.1,
+      "eco_score": 0,
+      "sentiment_score": -55.6,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": 90032,
+      "smart_money_change": -2782,
+      "smart_money_long": 120726,
+      "smart_money_short": 30694,
+      "commercial_net": -19296,
+      "open_interest": 354877,
+      "latest_date": "260407",
+      "cftc_code": "088691",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 120726,
+            "short": 30694,
+            "net": 90032
+          },
+          "swap_dealers": {
+            "long": 30165,
+            "short": 204620,
+            "net": -174455
+          },
+          "commercials": {
+            "long": 11713,
+            "short": 31009,
+            "net": -19296
+          },
+          "open_interest": 354877
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 120092,
+            "short": 27278,
+            "net": 92814
+          },
+          "swap_dealers": {
+            "long": 30201,
+            "short": 211931,
+            "net": -181730
+          },
+          "commercials": {
+            "long": 10979,
+            "short": 30889,
+            "net": -19910
+          },
+          "open_interest": 361409
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 119562,
+            "short": 27941,
+            "net": 91621
+          },
+          "swap_dealers": {
+            "long": 36069,
+            "short": 217681,
+            "net": -181612
+          },
+          "commercials": {
+            "long": 12761,
+            "short": 34977,
+            "net": -22216
+          },
+          "open_interest": 403925
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 130147,
+            "short": 28104,
+            "net": 102043
+          },
+          "swap_dealers": {
+            "long": 36975,
+            "short": 217789,
+            "net": -180814
+          },
+          "commercials": {
+            "long": 15879,
+            "short": 33713,
+            "net": -17834
+          },
+          "open_interest": 411388
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 125077,
+            "short": 26678,
+            "net": 98399
+          },
+          "swap_dealers": {
+            "long": 38318,
+            "short": 221598,
+            "net": -183280
+          },
+          "commercials": {
+            "long": 14826,
+            "short": 34522,
+            "net": -19696
+          },
+          "open_interest": 413956
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 123456,
+            "short": 25539,
+            "net": 97917
+          },
+          "swap_dealers": {
+            "long": 39360,
+            "short": 219152,
+            "net": -179792
+          },
+          "commercials": {
+            "long": 15219,
+            "short": 36010,
+            "net": -20791
+          },
+          "open_interest": 409789
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 121233,
+            "short": 25259,
+            "net": 95974
+          },
+          "swap_dealers": {
+            "long": 38848,
+            "short": 219836,
+            "net": -180988
+          },
+          "commercials": {
+            "long": 14800,
+            "short": 34618,
+            "net": -19818
+          },
+          "open_interest": 420182
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 123011,
+            "short": 27118,
+            "net": 95893
+          },
+          "swap_dealers": {
+            "long": 41702,
+            "short": 217086,
+            "net": -175384
+          },
+          "commercials": {
+            "long": 13643,
+            "short": 35041,
+            "net": -21398
+          },
+          "open_interest": 407078
+        }
+      ],
+      "retail_long_pct": 72.8,
+      "retail_short_pct": 27.2,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "AUD/USD": {
+      "symbol": "AUD/USD",
+      "category": "forex",
+      "composite_score": 3.5,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 22.3,
+      "eco_score": 0,
+      "sentiment_score": -30.8,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": 40747,
+      "smart_money_change": -3886,
+      "smart_money_long": 100984,
+      "smart_money_short": 60237,
+      "commercial_net": -117670,
+      "open_interest": 264658,
+      "latest_date": "260407",
+      "cftc_code": "232741",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 100984,
+            "short": 60237,
+            "net": 40747
+          },
+          "leveraged_funds": {
+            "long": 70748,
+            "short": 24847,
+            "net": 45901
+          },
+          "commercials": {
+            "long": 36181,
+            "short": 153851,
+            "net": -117670
+          },
+          "open_interest": 264658
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 103136,
+            "short": 58503,
+            "net": 44633
+          },
+          "leveraged_funds": {
+            "long": 76188,
+            "short": 23619,
+            "net": 52569
+          },
+          "commercials": {
+            "long": 30591,
+            "short": 158593,
+            "net": -128002
+          },
+          "open_interest": 263962
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 103155,
+            "short": 59229,
+            "net": 43926
+          },
+          "leveraged_funds": {
+            "long": 68577,
+            "short": 19432,
+            "net": 49145
+          },
+          "commercials": {
+            "long": 32930,
+            "short": 152299,
+            "net": -119369
+          },
+          "open_interest": 257694
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 103009,
+            "short": 61080,
+            "net": 41929
+          },
+          "leveraged_funds": {
+            "long": 69124,
+            "short": 23765,
+            "net": 45359
+          },
+          "commercials": {
+            "long": 34233,
+            "short": 154928,
+            "net": -120695
+          },
+          "open_interest": 265675
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 86048,
+            "short": 62719,
+            "net": 23329
+          },
+          "leveraged_funds": {
+            "long": 69980,
+            "short": 23412,
+            "net": 46568
+          },
+          "commercials": {
+            "long": 27336,
+            "short": 133072,
+            "net": -105736
+          },
+          "open_interest": 315898
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 89208,
+            "short": 60330,
+            "net": 28878
+          },
+          "leveraged_funds": {
+            "long": 82669,
+            "short": 28034,
+            "net": 54635
+          },
+          "commercials": {
+            "long": 18858,
+            "short": 132127,
+            "net": -113269
+          },
+          "open_interest": 267280
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 72490,
+            "short": 61913,
+            "net": 10577
+          },
+          "leveraged_funds": {
+            "long": 92751,
+            "short": 28098,
+            "net": 64653
+          },
+          "commercials": {
+            "long": 17713,
+            "short": 124938,
+            "net": -107225
+          },
+          "open_interest": 248697
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 65100,
+            "short": 63339,
+            "net": 1761
+          },
+          "leveraged_funds": {
+            "long": 103196,
+            "short": 32936,
+            "net": 70260
+          },
+          "commercials": {
+            "long": 17675,
+            "short": 125763,
+            "net": -108088
+          },
+          "open_interest": 256213
+        }
+      ],
+      "retail_long_pct": 65.4,
+      "retail_short_pct": 34.6,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "Wheat": {
+      "symbol": "Wheat",
+      "category": "commodity",
+      "composite_score": -2.3,
+      "composite_bias": "NEUTRAL",
+      "cot_score": -3.5,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": -4382,
+      "smart_money_change": -12163,
+      "smart_money_long": 109481,
+      "smart_money_short": 113863,
+      "commercial_net": -55679,
+      "open_interest": 502479,
+      "latest_date": "260407",
+      "cftc_code": "001602",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 109481,
+            "short": 113863,
+            "net": -4382
+          },
+          "swap_dealers": {
+            "long": 92790,
+            "short": 19469,
+            "net": 73321
+          },
+          "commercials": {
+            "long": 62694,
+            "short": 118373,
+            "net": -55679
+          },
+          "open_interest": 502479
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 117922,
+            "short": 110141,
+            "net": 7781
+          },
+          "swap_dealers": {
+            "long": 93082,
+            "short": 20603,
+            "net": 72479
+          },
+          "commercials": {
+            "long": 47352,
+            "short": 112307,
+            "net": -64955
+          },
+          "open_interest": 488618
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 110732,
+            "short": 111726,
+            "net": -994
+          },
+          "swap_dealers": {
+            "long": 87962,
+            "short": 20142,
+            "net": 67820
+          },
+          "commercials": {
+            "long": 52960,
+            "short": 104431,
+            "net": -51471
+          },
+          "open_interest": 484568
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 100946,
+            "short": 112820,
+            "net": -11874
+          },
+          "swap_dealers": {
+            "long": 93973,
+            "short": 19580,
+            "net": 74393
+          },
+          "commercials": {
+            "long": 47416,
+            "short": 97220,
+            "net": -49804
+          },
+          "open_interest": 478449
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 95305,
+            "short": 116551,
+            "net": -21246
+          },
+          "swap_dealers": {
+            "long": 95040,
+            "short": 19892,
+            "net": 75148
+          },
+          "commercials": {
+            "long": 47777,
+            "short": 93507,
+            "net": -45730
+          },
+          "open_interest": 464435
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 93666,
+            "short": 118755,
+            "net": -25089
+          },
+          "swap_dealers": {
+            "long": 92172,
+            "short": 18321,
+            "net": 73851
+          },
+          "commercials": {
+            "long": 40177,
+            "short": 86556,
+            "net": -46379
+          },
+          "open_interest": 446488
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 104141,
+            "short": 121899,
+            "net": -17758
+          },
+          "swap_dealers": {
+            "long": 90314,
+            "short": 15907,
+            "net": 74407
+          },
+          "commercials": {
+            "long": 43340,
+            "short": 97386,
+            "net": -54046
+          },
+          "open_interest": 456155
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 85112,
+            "short": 154679,
+            "net": -69567
+          },
+          "swap_dealers": {
+            "long": 78333,
+            "short": 7791,
+            "net": 70542
+          },
+          "commercials": {
+            "long": 69053,
+            "short": 81211,
+            "net": -12158
+          },
+          "open_interest": 472320
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    },
+    "Silver": {
+      "symbol": "Silver",
+      "category": "commodity",
+      "composite_score": -2.0,
+      "composite_bias": "NEUTRAL",
+      "cot_score": 14.5,
+      "eco_score": 0,
+      "sentiment_score": -37.0,
+      "weights": {
+        "cot": 0.5,
+        "eco": 0.25,
+        "sentiment": 0.25
+      },
+      "smart_money_net": 10398,
+      "smart_money_change": -868,
+      "smart_money_long": 13838,
+      "smart_money_short": 3440,
+      "commercial_net": -15570,
+      "open_interest": 115138,
+      "latest_date": "260407",
+      "cftc_code": "084691",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 13838,
+            "short": 3440,
+            "net": 10398
+          },
+          "swap_dealers": {
+            "long": 20483,
+            "short": 43828,
+            "net": -23345
+          },
+          "commercials": {
+            "long": 2164,
+            "short": 17734,
+            "net": -15570
+          },
+          "open_interest": 115138
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 14917,
+            "short": 3651,
+            "net": 11266
+          },
+          "swap_dealers": {
+            "long": 21552,
+            "short": 44917,
+            "net": -23365
+          },
+          "commercials": {
+            "long": 2542,
+            "short": 18034,
+            "net": -15492
+          },
+          "open_interest": 115169
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 15246,
+            "short": 4088,
+            "net": 11158
+          },
+          "swap_dealers": {
+            "long": 20547,
+            "short": 45593,
+            "net": -25046
+          },
+          "commercials": {
+            "long": 2726,
+            "short": 17968,
+            "net": -15242
+          },
+          "open_interest": 113164
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 12768,
+            "short": 3121,
+            "net": 9647
+          },
+          "swap_dealers": {
+            "long": 21883,
+            "short": 45444,
+            "net": -23561
+          },
+          "commercials": {
+            "long": 3847,
+            "short": 18644,
+            "net": -14797
+          },
+          "open_interest": 114758
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 13264,
+            "short": 2975,
+            "net": 10289
+          },
+          "swap_dealers": {
+            "long": 22637,
+            "short": 48061,
+            "net": -25424
+          },
+          "commercials": {
+            "long": 3181,
+            "short": 19334,
+            "net": -16153
+          },
+          "open_interest": 115458
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 12840,
+            "short": 5074,
+            "net": 7766
+          },
+          "swap_dealers": {
+            "long": 20817,
+            "short": 45768,
+            "net": -24951
+          },
+          "commercials": {
+            "long": 3750,
+            "short": 18765,
+            "net": -15015
+          },
+          "open_interest": 113326
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 13365,
+            "short": 4842,
+            "net": 8523
+          },
+          "swap_dealers": {
+            "long": 21546,
+            "short": 45951,
+            "net": -24405
+          },
+          "commercials": {
+            "long": 3641,
+            "short": 20316,
+            "net": -16675
+          },
+          "open_interest": 125454
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 12121,
+            "short": 6153,
+            "net": 5968
+          },
+          "swap_dealers": {
+            "long": 20839,
+            "short": 47303,
+            "net": -26464
+          },
+          "commercials": {
+            "long": 4959,
+            "short": 20842,
+            "net": -15883
+          },
+          "open_interest": 131496
+        }
+      ],
+      "retail_long_pct": 68.5,
+      "retail_short_pct": 31.5,
+      "retail_bias": "LONG",
+      "crowd_extreme": false
+    },
+    "Ethereum": {
+      "symbol": "Ethereum",
+      "category": "crypto",
+      "composite_score": -2.0,
+      "composite_bias": "NEUTRAL",
+      "cot_score": -3.1,
+      "eco_score": 0,
+      "sentiment_score": 0,
+      "weights": {
+        "cot": 0.65,
+        "eco": 0.35,
+        "sentiment": 0
+      },
+      "smart_money_net": -89,
+      "smart_money_change": 3,
+      "smart_money_long": 2080,
+      "smart_money_short": 2169,
+      "commercial_net": 10131,
+      "open_interest": 28648,
+      "latest_date": "260407",
+      "cftc_code": "146021",
+      "history": [
+        {
+          "date": "260407",
+          "smart_money": {
+            "long": 2080,
+            "short": 2169,
+            "net": -89
+          },
+          "leveraged_funds": {
+            "long": 2802,
+            "short": 12829,
+            "net": -10027
+          },
+          "commercials": {
+            "long": 16567,
+            "short": 6436,
+            "net": 10131
+          },
+          "open_interest": 28648
+        },
+        {
+          "date": "260331",
+          "smart_money": {
+            "long": 2113,
+            "short": 2205,
+            "net": -92
+          },
+          "leveraged_funds": {
+            "long": 2563,
+            "short": 12874,
+            "net": -10311
+          },
+          "commercials": {
+            "long": 16657,
+            "short": 6243,
+            "net": 10414
+          },
+          "open_interest": 28463
+        },
+        {
+          "date": "260324",
+          "smart_money": {
+            "long": 2210,
+            "short": 2082,
+            "net": 128
+          },
+          "leveraged_funds": {
+            "long": 1924,
+            "short": 12926,
+            "net": -11002
+          },
+          "commercials": {
+            "long": 17347,
+            "short": 6192,
+            "net": 11155
+          },
+          "open_interest": 35846
+        },
+        {
+          "date": "260317",
+          "smart_money": {
+            "long": 2894,
+            "short": 2192,
+            "net": 702
+          },
+          "leveraged_funds": {
+            "long": 2314,
+            "short": 16303,
+            "net": -13989
+          },
+          "commercials": {
+            "long": 19146,
+            "short": 6177,
+            "net": 12969
+          },
+          "open_interest": 38577
+        },
+        {
+          "date": "260310",
+          "smart_money": {
+            "long": 2209,
+            "short": 2161,
+            "net": 48
+          },
+          "leveraged_funds": {
+            "long": 2454,
+            "short": 13602,
+            "net": -11148
+          },
+          "commercials": {
+            "long": 17103,
+            "short": 5912,
+            "net": 11191
+          },
+          "open_interest": 35259
+        },
+        {
+          "date": "260303",
+          "smart_money": {
+            "long": 2012,
+            "short": 2050,
+            "net": -38
+          },
+          "leveraged_funds": {
+            "long": 3100,
+            "short": 10867,
+            "net": -7767
+          },
+          "commercials": {
+            "long": 16906,
+            "short": 8369,
+            "net": 8537
+          },
+          "open_interest": 34357
+        },
+        {
+          "date": "260224",
+          "smart_money": {
+            "long": 1209,
+            "short": 2378,
+            "net": -1169
+          },
+          "leveraged_funds": {
+            "long": 5031,
+            "short": 7734,
+            "net": -2703
+          },
+          "commercials": {
+            "long": 14731,
+            "short": 10067,
+            "net": 4664
+          },
+          "open_interest": 37088
+        },
+        {
+          "date": "260217",
+          "smart_money": {
+            "long": 2423,
+            "short": 1587,
+            "net": 836
+          },
+          "leveraged_funds": {
+            "long": 4469,
+            "short": 9994,
+            "net": -5525
+          },
+          "commercials": {
+            "long": 15632,
+            "short": 10251,
+            "net": 5381
+          },
+          "open_interest": 33154
+        }
+      ],
+      "retail_long_pct": null,
+      "retail_short_pct": null,
+      "retail_bias": null,
+      "crowd_extreme": false
+    }
+  }
+}

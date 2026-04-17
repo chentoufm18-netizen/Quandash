@@ -1,0 +1,96 @@
+{
+  "last_updated": "2026-04-17T14:17:31.838844",
+  "count": 9,
+  "data": {
+    "EUR/USD": {
+      "symbol": "EUR/USD",
+      "retail_long_pct": 38.5,
+      "retail_short_pct": 61.5,
+      "retail_bias": "SHORT",
+      "contrarian_score": 48.0,
+      "imbalance": 23.0,
+      "crowd_extreme": false,
+      "cot_alignment": "ALIGNED"
+    },
+    "GBP/USD": {
+      "symbol": "GBP/USD",
+      "retail_long_pct": 55.2,
+      "retail_short_pct": 44.8,
+      "retail_bias": "LONG",
+      "contrarian_score": -35.4,
+      "imbalance": 10.4,
+      "crowd_extreme": false,
+      "cot_alignment": "DIVERGENT"
+    },
+    "USD/JPY": {
+      "symbol": "USD/JPY",
+      "retail_long_pct": 62.1,
+      "retail_short_pct": 37.9,
+      "retail_bias": "LONG",
+      "contrarian_score": -24.2,
+      "imbalance": 24.2,
+      "crowd_extreme": false,
+      "cot_alignment": "NEUTRAL"
+    },
+    "USD/CHF": {
+      "symbol": "USD/CHF",
+      "retail_long_pct": 44.3,
+      "retail_short_pct": 55.7,
+      "retail_bias": "SHORT",
+      "contrarian_score": 36.4,
+      "imbalance": 11.4,
+      "crowd_extreme": false,
+      "cot_alignment": "ALIGNED"
+    },
+    "USD/CAD": {
+      "symbol": "USD/CAD",
+      "retail_long_pct": 58.7,
+      "retail_short_pct": 41.3,
+      "retail_bias": "LONG",
+      "contrarian_score": -42.4,
+      "imbalance": 17.4,
+      "crowd_extreme": false,
+      "cot_alignment": "DIVERGENT"
+    },
+    "AUD/USD": {
+      "symbol": "AUD/USD",
+      "retail_long_pct": 65.4,
+      "retail_short_pct": 34.6,
+      "retail_bias": "LONG",
+      "contrarian_score": -30.8,
+      "imbalance": 30.8,
+      "crowd_extreme": false,
+      "cot_alignment": "NEUTRAL"
+    },
+    "NZD/USD": {
+      "symbol": "NZD/USD",
+      "retail_long_pct": 71.2,
+      "retail_short_pct": 28.8,
+      "retail_bias": "LONG",
+      "contrarian_score": -67.4,
+      "imbalance": 42.4,
+      "crowd_extreme": false,
+      "cot_alignment": "DIVERGENT"
+    },
+    "Gold": {
+      "symbol": "Gold",
+      "retail_long_pct": 72.8,
+      "retail_short_pct": 27.2,
+      "retail_bias": "LONG",
+      "contrarian_score": -55.6,
+      "imbalance": 45.6,
+      "crowd_extreme": false,
+      "cot_alignment": "DIVERGENT"
+    },
+    "Silver": {
+      "symbol": "Silver",
+      "retail_long_pct": 68.5,
+      "retail_short_pct": 31.5,
+      "retail_bias": "LONG",
+      "contrarian_score": -37.0,
+      "imbalance": 37.0,
+      "crowd_extreme": false,
+      "cot_alignment": "NEUTRAL"
+    }
+  }
+}

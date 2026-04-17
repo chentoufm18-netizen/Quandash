@@ -1,0 +1,316 @@
+{
+  "last_updated": "2026-04-17T14:17:31.679585",
+  "total_events": 5,
+  "high_impact_count": 4,
+  "currency_scores": {
+    "USD": {
+      "score": 0,
+      "events": 3,
+      "high_impact": 2,
+      "normalized": 0
+    },
+    "EUR": {
+      "score": 0,
+      "events": 1,
+      "high_impact": 1,
+      "normalized": 0
+    },
+    "GBP": {
+      "score": 0,
+      "events": 1,
+      "high_impact": 1,
+      "normalized": 0
+    }
+  },
+  "events": [
+    {
+      "date": "Fri Apr 17",
+      "time": "08:30",
+      "currency": "USD",
+      "impact": "High",
+      "title": "Non-Farm Payrolls",
+      "actual": "",
+      "forecast": "185K",
+      "previous": "175K",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Fri Apr 17",
+      "time": "08:30",
+      "currency": "USD",
+      "impact": "High",
+      "title": "Unemployment Rate",
+      "actual": "",
+      "forecast": "3.9%",
+      "previous": "3.9%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Fri Apr 17",
+      "time": "10:00",
+      "currency": "USD",
+      "impact": "Medium",
+      "title": "ISM Manufacturing PMI",
+      "actual": "",
+      "forecast": "48.5",
+      "previous": "47.8",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Sat Apr 18",
+      "time": "03:00",
+      "currency": "EUR",
+      "impact": "High",
+      "title": "ECB Interest Rate Decision",
+      "actual": "",
+      "forecast": "3.65%",
+      "previous": "3.65%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD"
+      ]
+    },
+    {
+      "date": "Sat Apr 18",
+      "time": "09:30",
+      "currency": "GBP",
+      "impact": "High",
+      "title": "UK CPI y/y",
+      "actual": "",
+      "forecast": "2.8%",
+      "previous": "2.6%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "GBP/USD"
+      ]
+    }
+  ],
+  "high_impact_events": [
+    {
+      "date": "Fri Apr 17",
+      "time": "08:30",
+      "currency": "USD",
+      "impact": "High",
+      "title": "Non-Farm Payrolls",
+      "actual": "",
+      "forecast": "185K",
+      "previous": "175K",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Fri Apr 17",
+      "time": "08:30",
+      "currency": "USD",
+      "impact": "High",
+      "title": "Unemployment Rate",
+      "actual": "",
+      "forecast": "3.9%",
+      "previous": "3.9%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Sat Apr 18",
+      "time": "03:00",
+      "currency": "EUR",
+      "impact": "High",
+      "title": "ECB Interest Rate Decision",
+      "actual": "",
+      "forecast": "3.65%",
+      "previous": "3.65%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD"
+      ]
+    },
+    {
+      "date": "Sat Apr 18",
+      "time": "09:30",
+      "currency": "GBP",
+      "impact": "High",
+      "title": "UK CPI y/y",
+      "actual": "",
+      "forecast": "2.8%",
+      "previous": "2.6%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "GBP/USD"
+      ]
+    }
+  ],
+  "upcoming_events": [
+    {
+      "date": "Fri Apr 17",
+      "time": "08:30",
+      "currency": "USD",
+      "impact": "High",
+      "title": "Non-Farm Payrolls",
+      "actual": "",
+      "forecast": "185K",
+      "previous": "175K",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Fri Apr 17",
+      "time": "08:30",
+      "currency": "USD",
+      "impact": "High",
+      "title": "Unemployment Rate",
+      "actual": "",
+      "forecast": "3.9%",
+      "previous": "3.9%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Fri Apr 17",
+      "time": "10:00",
+      "currency": "USD",
+      "impact": "Medium",
+      "title": "ISM Manufacturing PMI",
+      "actual": "",
+      "forecast": "48.5",
+      "previous": "47.8",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "USD/CHF",
+        "USD/CAD",
+        "AUD/USD",
+        "NZD/USD",
+        "S&P 500",
+        "Nasdaq 100",
+        "Dow Jones",
+        "Gold",
+        "Crude Oil WTI"
+      ]
+    },
+    {
+      "date": "Sat Apr 18",
+      "time": "03:00",
+      "currency": "EUR",
+      "impact": "High",
+      "title": "ECB Interest Rate Decision",
+      "actual": "",
+      "forecast": "3.65%",
+      "previous": "3.65%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "EUR/USD"
+      ]
+    },
+    {
+      "date": "Sat Apr 18",
+      "time": "09:30",
+      "currency": "GBP",
+      "impact": "High",
+      "title": "UK CPI y/y",
+      "actual": "",
+      "forecast": "2.8%",
+      "previous": "2.6%",
+      "sentiment": "PENDING",
+      "affected_symbols": [
+        "GBP/USD"
+      ]
+    }
+  ],
+  "released_events": []
+}
