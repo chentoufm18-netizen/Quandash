@@ -1,5 +1,5 @@
 """
-Trading Dashboard — API Server (Local + Render)
+Trading Dashboard — API Server v3 (with Key Levels + Scheduled COT)
 """
 
 from flask import Flask, jsonify
@@ -14,13 +14,18 @@ from cot_fetcher import run as fetch_cot
 from eco_fetcher import run as fetch_eco
 from sentiment_fetcher import run as fetch_sentiment
 from scoring_engine import run as compute_scores
+from levels_fetcher import run as fetch_levels
 
 app = Flask(__name__)
 CORS(app)
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-REFRESH_INTERVAL = 300
 PORT = int(os.environ.get("PORT", 5000))
+
+# Refresh intervals
+ECO_SENT_INTERVAL = 300    # 5 min for eco + sentiment
+COT_INTERVAL = 86400       # 24h for COT (only changes weekly but we check daily)
+LEVELS_INTERVAL = 3600     # 1h for price levels
 
 
 def load_json(filename):
@@ -31,21 +36,51 @@ def load_json(filename):
         return json.load(f)
 
 
-def auto_refresh():
+# ============================================================
+# BACKGROUND THREADS
+# ============================================================
+
+def auto_refresh_fast():
+    """Eco + sentiment every 5 min."""
     while True:
-        time.sleep(REFRESH_INTERVAL)
+        time.sleep(ECO_SENT_INTERVAL)
         try:
-            print(f"[AUTO] Refresh {datetime.now().strftime('%H:%M:%S')}...")
             fetch_eco()
             fetch_sentiment()
             compute_scores()
         except Exception as e:
-            print(f"[AUTO] Error: {e}")
+            print(f"[AUTO-FAST] {e}")
 
+
+def auto_refresh_cot():
+    """COT data daily (only new data on Fridays)."""
+    while True:
+        time.sleep(COT_INTERVAL)
+        try:
+            print(f"[COT-DAILY] Checking for new COT data...")
+            fetch_cot()
+            compute_scores()
+        except Exception as e:
+            print(f"[COT-DAILY] {e}")
+
+
+def auto_refresh_levels():
+    """Key levels every hour."""
+    while True:
+        time.sleep(LEVELS_INTERVAL)
+        try:
+            fetch_levels()
+        except Exception as e:
+            print(f"[LEVELS] {e}")
+
+
+# ============================================================
+# ROUTES
+# ============================================================
 
 @app.route("/")
 def index():
-    return jsonify({"status": "ok", "name": "QuantDash API", "version": "2.0"})
+    return jsonify({"status": "ok", "name": "QuantDash API", "version": "3.0"})
 
 @app.route("/api/cot")
 def get_cot():
@@ -87,6 +122,19 @@ def get_composite():
     data = load_json("composite_scores.json")
     return jsonify(data) if data else (jsonify({"error": "unavailable"}), 404)
 
+@app.route("/api/levels")
+def get_levels():
+    data = load_json("levels_data.json")
+    return jsonify(data) if data else (jsonify({"error": "unavailable"}), 404)
+
+@app.route("/api/levels/<symbol>")
+def get_levels_symbol(symbol):
+    data = load_json("levels_data.json")
+    if not data: return jsonify({"error": "unavailable"}), 404
+    for k, v in data.get("data", {}).items():
+        if k.lower() == symbol.lower(): return jsonify(v)
+    return jsonify({"error": "not found"}), 404
+
 @app.route("/api/summary")
 def get_summary():
     cot = load_json("cot_data.json")
@@ -107,6 +155,7 @@ def get_summary():
             "economic": {"available": load_json("eco_data.json") is not None},
             "sentiment": {"available": load_json("sentiment_data.json") is not None},
             "composite": {"available": comp is not None},
+            "levels": {"available": load_json("levels_data.json") is not None},
         },
     })
 
@@ -116,21 +165,32 @@ def refresh_all():
         t0 = time.time()
         fetch_cot(); fetch_eco(); fetch_sentiment()
         comp = compute_scores()
+        fetch_levels()
         return jsonify({"status": "ok", "symbols": len(comp or {}), "elapsed": round(time.time()-t0, 1)})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
+# ============================================================
+# STARTUP
+# ============================================================
+
 def init_data():
     try:
         if not os.path.exists(os.path.join(DATA_DIR, "cot_data.json")):
             fetch_cot()
-        fetch_eco(); fetch_sentiment(); compute_scores()
+        fetch_eco()
+        fetch_sentiment()
+        compute_scores()
+        fetch_levels()
     except Exception as e:
         print(f"[INIT] {e}")
 
 init_data()
-threading.Thread(target=auto_refresh, daemon=True).start()
+
+# Start background threads
+for fn in [auto_refresh_fast, auto_refresh_cot, auto_refresh_levels]:
+    threading.Thread(target=fn, daemon=True).start()
 
 if __name__ == "__main__":
     app.run(debug=False, port=PORT)
