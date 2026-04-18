@@ -1,469 +1,212 @@
-"""
-Economic Calendar Fetcher v2
-Source primaire : FF JSON feed (nfs.faireconomy.media) — fiable, pas de 403
-Fallback : Forex Factory scraping
-Nouveau : impact_explanation — explication textuelle de chaque news publiée
-"""
-
-import requests
-import json
-import os
+"""ECO CALENDAR v5 — Twelve Data API"""
+import requests, json, os
 from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+TD_API_KEY = os.environ.get("TWELVE_DATA_KEY", "")
 
 CURRENCY_IMPACT = {
-    "USD": ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "USD/CAD", "AUD/USD", "NZD/USD", "S&P 500", "Nasdaq 100", "Dow Jones", "Gold", "Crude Oil WTI"],
-    "EUR": ["EUR/USD"],
-    "GBP": ["GBP/USD"],
-    "JPY": ["USD/JPY"],
-    "CHF": ["USD/CHF"],
-    "CAD": ["USD/CAD"],
-    "AUD": ["AUD/USD"],
-    "NZD": ["NZD/USD"],
+    "USD": ["EUR/USD","GBP/USD","USD/JPY","USD/CHF","USD/CAD","AUD/USD","NZD/USD","S&P 500","Nasdaq 100","Dow Jones","Gold","Crude Oil WTI"],
+    "EUR": ["EUR/USD"], "GBP": ["GBP/USD"], "JPY": ["USD/JPY"],
+    "CHF": ["USD/CHF"], "CAD": ["USD/CAD"], "AUD": ["AUD/USD"], "NZD": ["NZD/USD"],
 }
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/html,*/*",
-    "Accept-Language": "en-US,en;q=0.9",
+TD_COUNTRY = {
+    "United States":"USD","Eurozone":"EUR","United Kingdom":"GBP",
+    "Japan":"JPY","Switzerland":"CHF","Canada":"CAD","Australia":"AUD","New Zealand":"NZD",
 }
 
-# ============================================================
-# KNOWLEDGE BASE — explications des indicateurs
-# ============================================================
-
-EVENT_KNOWLEDGE = {
-    "non-farm payrolls": {"negative": False,
-        "above": "More jobs than expected → strong economy → USD bullish. Fed may delay rate cuts.",
-        "below": "Fewer jobs than expected → slowdown risk → USD bearish. Fed more likely to cut rates."},
-    "nfp": {"negative": False,
-        "above": "More jobs than expected → strong economy → USD bullish. Fed may delay rate cuts.",
-        "below": "Fewer jobs than expected → slowdown risk → USD bearish. Fed more likely to cut rates."},
-    "unemployment rate": {"negative": True,
-        "above": "Higher unemployment than expected → labor market weakening → USD bearish.",
-        "below": "Lower unemployment than expected → tight labor market → USD bullish."},
-    "jobless claims": {"negative": True,
-        "above": "More claims than expected → labor market softening → USD bearish.",
-        "below": "Fewer claims than expected → tight labor market → USD bullish."},
-    "initial jobless": {"negative": True,
-        "above": "More initial claims → job market weakening → USD bearish.",
-        "below": "Fewer initial claims → solid job market → USD bullish."},
-    "cpi": {"negative": False,
-        "above": "Inflation above forecast → hawkish Fed pressure → USD bullish near-term.",
-        "below": "Inflation below forecast → disinflation → USD bearish, rate cuts more likely."},
-    "core cpi": {"negative": False,
-        "above": "Core inflation hot → Fed stays restrictive → USD bullish.",
-        "below": "Core inflation cooling → Fed can ease → USD bearish."},
-    "ppi": {"negative": False,
-        "above": "Producer prices rising → upstream inflation → USD bullish.",
-        "below": "Producer prices falling → disinflation pipeline → USD bearish."},
-    "pce": {"negative": False,
-        "above": "PCE above target → Fed hawkish → USD bullish.",
-        "below": "PCE softening → Fed dovish → USD bearish."},
-    "gdp": {"negative": False,
-        "above": "GDP above forecast → strong growth → currency bullish.",
-        "below": "GDP below forecast → economic slowdown → currency bearish."},
-    "retail sales": {"negative": False,
-        "above": "Consumer spending strong → economy solid → USD bullish.",
-        "below": "Consumer spending weak → demand slowing → USD bearish."},
-    "ism manufacturing": {"negative": False,
-        "above": "Manufacturing expanding faster than expected → USD bullish.",
-        "below": "Manufacturing contracting more than expected → USD bearish."},
-    "ism services": {"negative": False,
-        "above": "Services sector beats → broad economy strong → USD bullish.",
-        "below": "Services sector misses → slowdown risk → USD bearish."},
-    "pmi": {"negative": False,
-        "above": "PMI beat → business activity expanding → currency bullish.",
-        "below": "PMI miss → activity contracting → currency bearish."},
-    "interest rate": {"negative": False,
-        "above": "Rate higher than expected → hawkish surprise → currency strongly bullish.",
-        "below": "Rate lower than expected → dovish surprise → currency strongly bearish."},
-    "rate decision": {"negative": False,
-        "above": "More hawkish than expected → currency bullish.",
-        "below": "More dovish than expected → currency bearish."},
-    "fomc": {"negative": False,
-        "above": "Fed more hawkish than expected → USD bullish.",
-        "below": "Fed more dovish than expected → USD bearish."},
-    "ecb": {"negative": False,
-        "above": "ECB more hawkish than expected → EUR bullish.",
-        "below": "ECB more dovish than expected → EUR bearish."},
-    "boe": {"negative": False,
-        "above": "BoE more hawkish than expected → GBP bullish.",
-        "below": "BoE more dovish than expected → GBP bearish."},
-    "trade balance": {"negative": False,
-        "above": "Trade surplus better than expected → currency bullish.",
-        "below": "Trade deficit wider than expected → currency bearish."},
-    "housing starts": {"negative": False,
-        "above": "More construction than expected → healthy economy → USD bullish.",
-        "below": "Less construction → slowdown signal → USD bearish."},
-    "building permits": {"negative": False,
-        "above": "More permits → forward construction strong → USD bullish.",
-        "below": "Fewer permits → slowdown ahead → USD bearish."},
-    "durable goods": {"negative": False,
-        "above": "Orders beat → business investment strong → USD bullish.",
-        "below": "Orders missed → capex slowing → USD bearish."},
-    "consumer confidence": {"negative": False,
-        "above": "Confidence above forecast → spending expected to rise → USD bullish.",
-        "below": "Confidence below forecast → spending risk → USD bearish."},
-    "michigan": {"negative": False,
-        "above": "Sentiment beat → consumer optimism → USD bullish.",
-        "below": "Sentiment missed → consumer pessimism → USD bearish."},
-    "crude oil": {"negative": True,
-        "above": "More supply than expected → oil bearish pressure.",
-        "below": "Less supply than expected → oil bullish pressure."},
-    "inflation": {"negative": False,
-        "above": "Inflation above target → central bank hawkish pressure → currency bullish near-term.",
-        "below": "Inflation below target → easing likely → currency bearish."},
-    "employment change": {"negative": False,
-        "above": "More jobs than expected → labor market tight → currency bullish.",
-        "below": "Fewer jobs than expected → labor market loosening → currency bearish."},
-    "average hourly earnings": {"negative": False,
-        "above": "Wages rising faster → wage inflation → USD bullish (Fed hawkish).",
-        "below": "Wages rising slower → less inflation pressure → USD bearish."},
+KB = {
+    "non-farm employment": {"neg":False,"above":"Plus de jobs → USD bullish. Fed retarde les baisses.","below":"Moins de jobs → USD bearish. Fed coupe les taux."},
+    "unemployment rate":   {"neg":True, "above":"Chômage plus haut → USD bearish.","below":"Chômage plus bas → USD bullish."},
+    "jobless claims":      {"neg":True, "above":"Plus de claims → USD bearish.","below":"Moins de claims → USD bullish."},
+    "cpi":    {"neg":False,"above":"Inflation élevée → Fed hawkish → USD bullish.","below":"Inflation basse → Fed dovish → USD bearish."},
+    "core cpi":{"neg":False,"above":"Core CPI élevé → Fed restrictive → USD bullish.","below":"Core CPI bas → Fed peut assouplir → USD bearish."},
+    "ppi":    {"neg":False,"above":"Prix prod. en hausse → inflation pipeline → USD bullish.","below":"Prix prod. en baisse → désinflation → USD bearish."},
+    "core ppi":{"neg":False,"above":"Core PPI en hausse → inflation persistante → USD bullish.","below":"Core PPI en baisse → pression réduite → USD bearish."},
+    "gdp":    {"neg":False,"above":"PIB au-dessus → croissance forte → bullish.","below":"PIB sous → ralentissement → bearish."},
+    "retail sales":{"neg":False,"above":"Conso forte → USD bullish.","below":"Conso faible → USD bearish."},
+    "ism":    {"neg":False,"above":"PMI beat → expansion → bullish.","below":"PMI miss → contraction → bearish."},
+    "pmi":    {"neg":False,"above":"PMI beat → expansion → bullish.","below":"PMI miss → contraction → bearish."},
+    "interest rate":{"neg":False,"above":"Taux plus haut → hawkish surprise → bullish.","below":"Taux plus bas → dovish surprise → bearish."},
+    "rate decision":{"neg":False,"above":"Plus hawkish → bullish.","below":"Plus dovish → bearish."},
+    "fomc":   {"neg":False,"above":"Fed hawkish → USD bullish.","below":"Fed dovish → USD bearish."},
+    "ecb":    {"neg":False,"above":"BCE hawkish → EUR bullish.","below":"BCE dovish → EUR bearish."},
+    "boe":    {"neg":False,"above":"BoE hawkish → GBP bullish.","below":"BoE dovish → GBP bearish."},
+    "trade balance":{"neg":False,"above":"Surplus meilleur → bullish.","below":"Déficit pire → bearish."},
+    "durable goods":{"neg":False,"above":"Commandes en hausse → USD bullish.","below":"Commandes en baisse → USD bearish."},
+    "consumer confidence":{"neg":False,"above":"Confiance en hausse → USD bullish.","below":"Confiance en baisse → USD bearish."},
+    "michigan":{"neg":False,"above":"Sentiment en hausse → USD bullish.","below":"Sentiment en baisse → USD bearish."},
+    "average hourly":{"neg":False,"above":"Salaires en hausse → inflation salariale → USD bullish.","below":"Salaires en baisse → USD bearish."},
+    "employment change":{"neg":False,"above":"Plus d'emplois → bullish.","below":"Moins d'emplois → bearish."},
+    "housing":{"neg":False,"above":"Construction en hausse → USD bullish.","below":"Construction en baisse → USD bearish."},
+    "inflation":{"neg":False,"above":"Inflation élevée → hawkish → bullish.","below":"Inflation basse → dovish → bearish."},
 }
 
-
-def get_event_knowledge(title):
-    title_lower = title.lower()
-    for key, data in EVENT_KNOWLEDGE.items():
-        if key in title_lower:
-            return data
+def _kb(title):
+    t = title.lower()
+    for k,v in KB.items():
+        if k in t: return v
     return None
 
+def _num(v):
+    if not v or v in ("","—","-"): return None
+    v = str(v).strip().replace("%","").replace(",","")
+    m = 1
+    if v.upper().endswith("K"): m=1000;v=v[:-1]
+    elif v.upper().endswith("M"): m=1000000;v=v[:-1]
+    elif v.upper().endswith("B"): m=1000000000;v=v[:-1]
+    try: return float(v)*m
+    except: return None
 
-# ============================================================
-# SOURCE 1 — FF JSON FEED (fiable, pas de 403)
-# ============================================================
-
-def fetch_ff_json():
-    urls = [
-        "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-        "https://nfs.faireconomy.media/ff_calendar_nextweek.json",
-    ]
-    all_events = []
-
-    for url in urls:
-        try:
-            resp = requests.get(url, headers=HEADERS, timeout=15)
-            if resp.status_code != 200:
-                print(f"  [ECO] JSON feed HTTP {resp.status_code}: {url}")
-                continue
-
-            data = resp.json()
-            print(f"  [ECO] JSON feed OK: {len(data)} events from {url.split('/')[-1]}")
-
-            for item in data:
-                impact_raw = item.get("impact", "").lower()
-                if impact_raw == "high":
-                    impact = "High"
-                elif impact_raw == "medium":
-                    impact = "Medium"
-                else:
-                    impact = "Low"
-
-                date_str = item.get("date", "")
-                try:
-                    dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
-                    date_fmt = dt.strftime("%a %b %d")
-                    time_fmt = dt.strftime("%H:%M")
-                except Exception:
-                    date_fmt = date_str[:10]
-                    time_fmt = ""
-
-                title = item.get("title", "")
-                currency = item.get("country", "").upper()
-                actual = item.get("actual", "") or ""
-                forecast = item.get("forecast", "") or ""
-                previous = item.get("previous", "") or ""
-
-                sentiment = analyze_sentiment(title, actual, forecast, previous)
-                explanation = generate_explanation(title, actual, forecast, previous, currency)
-
-                all_events.append({
-                    "date": date_fmt,
-                    "time": time_fmt,
-                    "currency": currency,
-                    "impact": impact,
-                    "title": title,
-                    "actual": actual,
-                    "forecast": forecast,
-                    "previous": previous,
-                    "sentiment": sentiment,
-                    "impact_explanation": explanation,
-                    "affected_symbols": CURRENCY_IMPACT.get(currency, []),
-                })
-
-        except Exception as e:
-            print(f"  [ECO] JSON feed error: {e}")
-            continue
-
-    return all_events
-
-
-# ============================================================
-# SOURCE 2 — FOREX FACTORY SCRAPING (fallback)
-# ============================================================
-
-def fetch_forex_factory_scrape():
-    url = "https://www.forexfactory.com/calendar"
-    print("  [ECO] Fallback: scraping Forex Factory...")
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=20)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        print(f"  [ECO] Scraping failed: {e}")
-        return []
-
-    soup = BeautifulSoup(response.text, "lxml")
-    events = []
-    rows = soup.select("tr.calendar__row")
-    current_date = ""
-
-    for row in rows:
-        try:
-            date_cell = row.select_one(".calendar__date")
-            if date_cell and date_cell.text.strip():
-                current_date = date_cell.text.strip()
-
-            time_cell = row.select_one(".calendar__time")
-            time_str = time_cell.text.strip() if time_cell else ""
-            currency_cell = row.select_one(".calendar__currency")
-            currency = currency_cell.text.strip() if currency_cell else ""
-            impact_cell = row.select_one(".calendar__impact")
-            impact = "Low"
-            if impact_cell:
-                spans = impact_cell.select("span")
-                if len([s for s in spans if "high" in s.get("class", [])]) > 0:
-                    impact = "High"
-                elif len([s for s in spans if "medium" in s.get("class", [])]) > 0:
-                    impact = "Medium"
-
-            title_cell = row.select_one(".calendar__event-title")
-            title = title_cell.text.strip() if title_cell else ""
-            actual = (row.select_one(".calendar__actual") or type('', (), {'text': ''})()).text.strip()
-            forecast = (row.select_one(".calendar__forecast") or type('', (), {'text': ''})()).text.strip()
-            previous = (row.select_one(".calendar__previous") or type('', (), {'text': ''})()).text.strip()
-
-            if not title or not currency:
-                continue
-
-            sentiment = analyze_sentiment(title, actual, forecast, previous)
-            explanation = generate_explanation(title, actual, forecast, previous, currency)
-
-            events.append({
-                "date": current_date, "time": time_str, "currency": currency,
-                "impact": impact, "title": title, "actual": actual,
-                "forecast": forecast, "previous": previous,
-                "sentiment": sentiment, "impact_explanation": explanation,
-                "affected_symbols": CURRENCY_IMPACT.get(currency, []),
-            })
-        except Exception:
-            continue
-
-    print(f"  [ECO] Scraping: {len(events)} events")
-    return events
-
-
-# ============================================================
-# ANALYSE SENTIMENT
-# ============================================================
-
-def analyze_sentiment(title, actual, forecast, previous):
-    if not actual:
-        return "PENDING"
-
-    def clean_val(v):
-        if not v:
-            return None
-        v = str(v).replace("%", "").replace("K", "000").replace("M", "000000").replace("B", "000000000")
-        v = v.replace(",", "").strip()
-        try:
-            return float(v)
-        except ValueError:
-            return None
-
-    act = clean_val(actual)
-    fct = clean_val(forecast)
-    prv = clean_val(previous)
-
-    if act is None:
+def _sent(title, actual, forecast, previous):
+    if not actual or actual in ("","—","-"): return "PENDING"
+    act=_num(actual); fct=_num(forecast); prv=_num(previous)
+    if act is None: return "NEUTRAL"
+    kb=_kb(title); neg=kb["neg"] if kb else False
+    if fct is not None and fct!=0:
+        d=((act-fct)/abs(fct))*100
+        if d>2: return "BEARISH" if neg else "BULLISH"
+        if d<-2: return "BULLISH" if neg else "BEARISH"
         return "NEUTRAL"
-
-    knowledge = get_event_knowledge(title)
-    is_negative = knowledge["negative"] if knowledge else False
-
-    if fct is not None and fct != 0:
-        diff_pct = ((act - fct) / abs(fct)) * 100
-        if diff_pct > 2:
-            return "BEARISH" if is_negative else "BULLISH"
-        elif diff_pct < -2:
-            return "BULLISH" if is_negative else "BEARISH"
-
-    if prv is not None:
-        if act > prv:
-            return "BEARISH" if is_negative else "BULLISH"
-        elif act < prv:
-            return "BULLISH" if is_negative else "BEARISH"
-
+    if prv is not None and prv!=0:
+        d=((act-prv)/abs(prv))*100
+        if d>2: return "BEARISH" if neg else "BULLISH"
+        if d<-2: return "BULLISH" if neg else "BEARISH"
     return "NEUTRAL"
 
+def _expl(title, actual, forecast, previous, currency):
+    if not actual or actual in ("","—","-"): return None
+    act=_num(actual); fct=_num(forecast); prv=_num(previous)
+    kb=_kb(title); neg=kb["neg"] if kb else False
+    if act is not None and fct is not None and fct!=0:
+        diff=act-fct; pct=(diff/abs(fct))*100; sign="+" if diff>0 else ""
+        if abs(pct)<=2: return f"Conforme au forecast ({actual} vs {forecast}). Pas de surprise → impact limité."
+        beat=(diff>0) if not neg else (diff<0)
+        head=f"Actual {actual} vs forecast {forecast} ({sign}{pct:.1f}%)"
+        if kb: return f"{head} — {kb['above'] if beat else kb['below']}"
+        return f"{head} — {'Mieux' if beat else 'Pire'} que prévu → {currency} {'bullish' if beat else 'bearish'}."
+    if act is not None and prv is not None and prv!=0:
+        diff=act-prv; pct=(diff/abs(prv))*100; sign="+" if diff>0 else ""
+        improving=(diff>0) if not neg else (diff<0)
+        head=f"Actual {actual} vs précédent {previous} ({sign}{pct:.1f}%)"
+        if kb: return f"{head} — {kb['above'] if improving else kb['below']}"
+        return head
+    return f"Publié : {actual}."
 
-# ============================================================
-# GÉNÉRATION D'EXPLICATION
-# ============================================================
+def _score(events):
+    s={}
+    for e in events:
+        c=e.get("currency",""); imp=e.get("impact","Low"); sent=e.get("sentiment","NEUTRAL")
+        if not c: continue
+        w={"High":3,"Medium":1.5,"Low":0.5}.get(imp,0.5)
+        d={"BULLISH":w,"BEARISH":-w}.get(sent,0)
+        if c not in s: s[c]={"score":0,"events":0,"high_impact":0}
+        s[c]["score"]+=d; s[c]["events"]+=1
+        if imp=="High": s[c]["high_impact"]+=1
+    for c in s: s[c]["normalized"]=max(-100,min(100,s[c]["score"]*10))
+    return s
 
-def generate_explanation(title, actual, forecast, previous, currency):
-    if not actual:
-        return None
+def fetch_twelvedata():
+    if not TD_API_KEY: print("  [ECO] Pas de clé Twelve Data"); return []
+    print("  [ECO] SOURCE 1: Twelve Data Economic Calendar...")
+    today=datetime.now()
+    start=(today-timedelta(days=today.weekday()+7)).strftime("%Y-%m-%d")
+    end=(today+timedelta(days=14-today.weekday())).strftime("%Y-%m-%d")
+    try:
+        r=requests.get("https://api.twelvedata.com/economic_calendar",
+            params={"start_date":start,"end_date":end,"apikey":TD_API_KEY},
+            headers={"User-Agent":"Mozilla/5.0"},timeout=20)
+        if r.status_code!=200: print(f"  [ECO]   HTTP {r.status_code}"); return []
+        data=r.json()
+        if "code" in data and data["code"]!=200: print(f"  [ECO]   API: {data.get('message','')}"); return []
+        raw=data.get("events",data.get("data",data if isinstance(data,list) else []))
+        print(f"  [ECO]   {len(raw)} événements bruts Twelve Data")
+        events=[]; seen=set()
+        for item in raw:
+            title=(item.get("event") or item.get("title") or "").strip()
+            country=(item.get("country") or "").strip()
+            currency=TD_COUNTRY.get(country, item.get("currency","").upper())
+            if not title or not currency: continue
+            date_raw=item.get("date",""); time_raw=item.get("time","")
+            try:
+                if "T" in date_raw:
+                    dt=datetime.fromisoformat(date_raw.replace("Z","+00:00"))
+                    df=dt.strftime("%a %b %d"); tf=dt.strftime("%H:%M")
+                else:
+                    dt=datetime.strptime(date_raw,"%Y-%m-%d")
+                    df=dt.strftime("%a %b %d"); tf=time_raw[:5] if time_raw else ""
+            except: df=date_raw[:10]; tf=time_raw[:5] if time_raw else ""
+            key=f"{df}|{tf}|{title}|{currency}"
+            if key in seen: continue
+            seen.add(key)
+            imp_raw=(item.get("impact") or item.get("importance") or "low").lower()
+            imp={"high":"High","medium":"Medium","low":"Low"}.get(imp_raw,"Low")
+            actual=str(item.get("actual","") or "").strip()
+            forecast=str(item.get("estimate","") or item.get("forecast","") or "").strip()
+            previous=str(item.get("previous","") or "").strip()
+            events.append({"date":df,"time":tf,"currency":currency,"impact":imp,"title":title,
+                "actual":actual,"forecast":forecast,"previous":previous,
+                "sentiment":_sent(title,actual,forecast,previous),
+                "impact_explanation":_expl(title,actual,forecast,previous,currency),
+                "affected_symbols":CURRENCY_IMPACT.get(currency,[])})
+        n=sum(1 for e in events if e["actual"])
+        print(f"  [ECO]   → {len(events)} events, {n} avec actuals")
+        return events
+    except Exception as e: print(f"  [ECO]   Erreur: {e}"); return []
 
-    def clean_val(v):
-        if not v:
-            return None
-        v = str(v).replace("%", "").replace("K", "000").replace("M", "000000").replace("B", "000000000")
-        v = v.replace(",", "").strip()
+def fetch_faireconomy():
+    print("  [ECO] SOURCE 2: faireconomy.media (fallback)...")
+    events=[]; seen=set()
+    for label,url in [("thisweek","https://nfs.faireconomy.media/ff_calendar_thisweek.json"),
+                      ("lastweek","https://nfs.faireconomy.media/ff_calendar_lastweek.json")]:
         try:
-            return float(v)
-        except ValueError:
-            return None
-
-    act = clean_val(actual)
-    fct = clean_val(forecast)
-    prv = clean_val(previous)
-    knowledge = get_event_knowledge(title)
-    is_negative = knowledge["negative"] if knowledge else False
-
-    if act is not None and fct is not None and fct != 0:
-        diff = act - fct
-        diff_pct = (diff / abs(fct)) * 100
-        sign = "+" if diff > 0 else ""
-
-        if abs(diff_pct) <= 2:
-            return f"In line with forecast ({actual} vs {forecast}). No significant surprise — limited market impact expected."
-
-        beat = diff > 0
-        if is_negative:
-            beat = not beat
-
-        direction = "beat" if beat else "missed"
-        surprise = f"Actual {actual} vs forecast {forecast} ({sign}{diff_pct:.1f}%)"
-
-        if knowledge:
-            base = knowledge["above"] if direction == "beat" else knowledge["below"]
-            return f"{surprise} — {base}"
-        else:
-            bias = "bullish" if beat else "bearish"
-            return f"{surprise} — {'Better' if beat else 'Worse'} than expected → {currency} {bias} pressure."
-
-    elif act is not None and prv is not None:
-        diff = act - prv
-        sign = "+" if diff > 0 else ""
-        improving = diff > 0
-        if is_negative:
-            improving = not improving
-
-        base_text = ""
-        if knowledge:
-            base_text = " — " + (knowledge["above"] if improving else knowledge["below"])
-
-        return f"Actual {actual} vs previous {previous} ({sign}{diff:.3g}){base_text}"
-
-    return f"Published: {actual}. Awaiting comparison data."
-
-
-# ============================================================
-# SCORING
-# ============================================================
-
-def calculate_eco_scores(events):
-    currency_scores = {}
-    for event in events:
-        currency = event.get("currency", "")
-        if not currency:
-            continue
-        impact = event.get("impact", "Low")
-        sentiment = event.get("sentiment", "NEUTRAL")
-        weight = {"High": 3, "Medium": 1.5, "Low": 0.5}.get(impact, 0.5)
-        score_delta = {"BULLISH": weight, "BEARISH": -weight, "NEUTRAL": 0, "PENDING": 0}.get(sentiment, 0)
-        if currency not in currency_scores:
-            currency_scores[currency] = {"score": 0, "events": 0, "high_impact": 0}
-        currency_scores[currency]["score"] += score_delta
-        currency_scores[currency]["events"] += 1
-        if impact == "High":
-            currency_scores[currency]["high_impact"] += 1
-    for currency in currency_scores:
-        n = currency_scores[currency]["events"]
-        raw = currency_scores[currency]["score"]
-        currency_scores[currency]["normalized"] = max(-100, min(100, raw * 10)) if n > 0 else 0
-    return currency_scores
-
-
-# ============================================================
-# SAUVEGARDE
-# ============================================================
-
-def save_results(events, eco_scores):
-    os.makedirs(DATA_DIR, exist_ok=True)
-    high_impact = [e for e in events if e["impact"] == "High"]
-    pending = [e for e in events if e["sentiment"] == "PENDING"]
-    released = [e for e in events if e.get("impact_explanation")]
-
-    output = {
-        "last_updated": datetime.now().isoformat(),
-        "total_events": len(events),
-        "high_impact_count": len(high_impact),
-        "currency_scores": eco_scores,
-        "events": events,
-        "high_impact_events": high_impact,
-        "upcoming_events": pending[:10],
-        "released_events": released[:20],
-    }
-
-    filepath = os.path.join(DATA_DIR, "eco_data.json")
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"  [ECO] Saved: {filepath}")
-    return filepath
-
-
-# ============================================================
-# MAIN
-# ============================================================
+            r=requests.get(url,headers={"User-Agent":"Mozilla/5.0"},timeout=15)
+            if r.status_code!=200: print(f"  [ECO]   {label}: HTTP {r.status_code}"); continue
+            for item in r.json():
+                title=(item.get("title") or "").strip()
+                currency=(item.get("country") or "").upper().strip()
+                if not title or not currency: continue
+                date_raw=item.get("date","")
+                try: dt=datetime.fromisoformat(date_raw.replace("Z","+00:00")); df=dt.strftime("%a %b %d"); tf=dt.strftime("%H:%M")
+                except: df=date_raw[:10]; tf=""
+                key=f"{df}|{tf}|{title}|{currency}"
+                if key in seen: continue
+                seen.add(key)
+                imp=(item.get("impact") or "").capitalize()
+                if imp not in ("High","Medium","Low"): imp="Low"
+                actual=(item.get("actual") or "").strip()
+                forecast=(item.get("forecast") or "").strip()
+                previous=(item.get("previous") or "").strip()
+                events.append({"date":df,"time":tf,"currency":currency,"impact":imp,"title":title,
+                    "actual":actual,"forecast":forecast,"previous":previous,
+                    "sentiment":_sent(title,actual,forecast,previous),
+                    "impact_explanation":_expl(title,actual,forecast,previous,currency),
+                    "affected_symbols":CURRENCY_IMPACT.get(currency,[])})
+        except Exception as e: print(f"  [ECO]   {label}: {e}")
+    n=sum(1 for e in events if e["actual"])
+    print(f"  [ECO]   {len(events)} events, {n} avec actuals")
+    return events
 
 def run():
-    print("=" * 55)
-    print("  ECO CALENDAR FETCHER v2")
-    print("=" * 55)
-
-    events = fetch_ff_json()
-
-    if not events:
-        print("  [ECO] JSON feed empty, trying FF scrape...")
-        events = fetch_forex_factory_scrape()
-
-    if not events:
-        print("  [ECO] All sources failed, using static fallback...")
-        today = datetime.now().strftime("%a %b %d")
-        tomorrow = (datetime.now() + timedelta(days=1)).strftime("%a %b %d")
-        events = [
-            {"date": today, "time": "14:30", "currency": "USD", "impact": "High",
-             "title": "Non-Farm Payrolls", "actual": "", "forecast": "185K", "previous": "175K",
-             "sentiment": "PENDING", "impact_explanation": None, "affected_symbols": CURRENCY_IMPACT["USD"]},
-            {"date": tomorrow, "time": "12:45", "currency": "EUR", "impact": "High",
-             "title": "ECB Interest Rate Decision", "actual": "", "forecast": "2.65%", "previous": "2.65%",
-             "sentiment": "PENDING", "impact_explanation": None, "affected_symbols": CURRENCY_IMPACT["EUR"]},
-        ]
-
-    eco_scores = calculate_eco_scores(events)
-
-    released = [e for e in events if e.get("impact_explanation")]
-    print(f"  {len(events)} events | {len([e for e in events if e['impact']=='High'])} High | {len(released)} published with explanation")
-
-    save_results(events, eco_scores)
-    print(f"\n{'=' * 55}")
+    print("="*55); print("  ECO CALENDAR v5 — QuantDash"); print("="*55)
+    events=fetch_twelvedata()
+    if not events: events=fetch_faireconomy()
+    if not events: print("  [ECO] Toutes sources échouées — calendrier vide"); events=[]
+    n_publi=sum(1 for e in events if e.get("impact_explanation"))
+    n_pend=sum(1 for e in events if e["sentiment"]=="PENDING")
+    print(f"\n  {len(events)} events | {sum(1 for e in events if e['impact']=='High')} High | {n_publi} publiés | {n_pend} à venir")
+    eco_scores=_score(events)
+    os.makedirs(DATA_DIR,exist_ok=True)
+    fp=os.path.join(DATA_DIR,"eco_data.json")
+    with open(fp,"w",encoding="utf-8") as f:
+        json.dump({"last_updated":datetime.now().isoformat(),"total_events":len(events),
+            "high_impact_count":sum(1 for e in events if e["impact"]=="High"),
+            "published_count":n_publi,"currency_scores":eco_scores,"events":events,
+            "high_impact_events":[e for e in events if e["impact"]=="High"],
+            "upcoming_events":[e for e in events if e["sentiment"]=="PENDING"][:15],
+            "released_events":[e for e in events if e.get("impact_explanation")][:25]},f,indent=2,ensure_ascii=False)
+    print(f"  [ECO] Sauvegardé → {fp}"); print("="*55)
     return events, eco_scores
 
-
-if __name__ == "__main__":
-    run()
+if __name__=="__main__": run()
