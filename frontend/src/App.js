@@ -555,24 +555,6 @@ function App() {
             </div>
 
             <div className="method-block">
-              <div className="method-block-title">NRNR Playbook — Patterns</div>
-              <div className="method-patterns">
-                {[
-                  { name: 'Three Bars Inside Bar', desc: 'Compression setup — breakout imminent after 3 candles inside a mother bar range.' },
-                  { name: 'Morning Doji', desc: 'Indecision after a trend — reversal signal when confirmed by institutional bias.' },
-                  { name: 'Staircase', desc: 'Step-by-step accumulation pattern — sequential higher lows (bull) or lower highs (bear).' },
-                  { name: 'Grab the Bag', desc: 'Liquidity grab below/above key level followed by sharp reversal — classic SM trap.' },
-                  { name: 'Anchor', desc: 'Price returning to a previously established institutional level — high-probability re-test.' },
-                ].map((p, i) => (
-                  <div key={i} className="method-pattern-row">
-                    <span className="method-pattern-name">{p.name}</span>
-                    <span className="method-pattern-desc">{p.desc}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="method-block">
               <div className="method-block-title">Coverage — 20 Instruments</div>
               <div className="method-instruments">
                 {[
@@ -721,30 +703,6 @@ function App() {
                     <div className="sr-row support"><span>S3</span><span>{fmt(lv.support_3, selectedSymbol)}</span></div>
                   </div>
 
-                  {/* NRNR Patterns */}
-                  {lv.patterns && lv.patterns.length > 0 && (
-                    <>
-                      <div className="subsection-title">Patterns NRNR Détectés ({lv.patterns.length})</div>
-                      {lv.patterns.slice(-5).reverse().map((p, i) => (
-                        <div key={i} className={`pattern-card ${p.direction === 'BULLISH' ? 'pattern-bull' : p.direction === 'BEARISH' ? 'pattern-bear' : 'pattern-neutral'}`}>
-                          <div className="pattern-header">
-                            <span className="pattern-type">{p.type}</span>
-                            <span className="pattern-dir" style={{ color: p.direction === 'BULLISH' ? 'var(--green)' : p.direction === 'BEARISH' ? 'var(--red)' : 'var(--blue)' }}>
-                              {p.direction}
-                            </span>
-                          </div>
-                          <div className="pattern-desc">{p.description || `Détecté le ${p.date}`}</div>
-                          <div className="pattern-levels">
-                            {p.entry && <span>Entry: {fmt(p.entry, selectedSymbol)}</span>}
-                            {p.stop_loss && <span>SL: {fmt(p.stop_loss, selectedSymbol)}</span>}
-                            {p.target && <span>TP: {fmt(p.target, selectedSymbol)}</span>}
-                            {p.date && <span>📅 {p.date}</span>}
-                          </div>
-                        </div>
-                      ))}
-                    </>
-                  )}
-
                   {/* Smoke Zones */}
                   {lv.smoke_zones && lv.smoke_zones.length > 0 && (
                     <>
@@ -779,12 +737,6 @@ function App() {
                     </>
                   )}
 
-                  {/* No patterns message */}
-                  {(!lv.patterns || lv.patterns.length === 0) && (!lv.smoke_zones || lv.smoke_zones.length === 0) && (
-                    <p className="muted" style={{ padding: '10px 0', fontSize: 12 }}>
-                      Aucun pattern NRNR ni smoke zone détecté. {lv.data_source === 'fallback' ? 'Ajoutez la clé Twelve Data pour les données réelles.' : ''}
-                    </p>
-                  )}
                 </>
               )}
 

@@ -165,107 +165,7 @@ def calculate_key_levels(candles, symbol):
     s2 = pivot - (prev["high"] - prev["low"])
     s3 = prev["low"] - 2 * (prev["high"] - pivot)
 
-    # ============================================================
-    # NRNR PATTERN DETECTION
-    # ============================================================
-    patterns = []
 
-    # Three Bars Inside Bar
-    for i in range(2, len(candles)):
-        mother = candles[i - 2]
-        ib1 = candles[i - 1]
-        ib2 = candles[i]
-        if (ib1["high"] <= mother["high"] and ib1["low"] >= mother["low"] and
-                ib2["high"] <= mother["high"] and ib2["low"] >= mother["low"]):
-            patterns.append({
-                "type": "Three Bars Inside Bar",
-                "date": ib2["date"],
-                "level_high": mother["high"],
-                "level_low": mother["low"],
-                "direction": "BREAKOUT_PENDING",
-                "description": f"Compression entre {round(mother['low'], 5)} et {round(mother['high'], 5)}",
-            })
-
-    # Morning Doji Star (bullish reversal)
-    for i in range(2, len(candles)):
-        c0 = candles[i - 2]  # Large bearish
-        c1 = candles[i - 1]  # Doji (small body)
-        c2 = candles[i]      # Large bullish
-
-        body0 = abs(c0["close"] - c0["open"])
-        body1 = abs(c1["close"] - c1["open"])
-        body2 = abs(c2["close"] - c2["open"])
-        range1 = c1["high"] - c1["low"]
-
-        if (c0["close"] < c0["open"] and          # Bearish candle
-                range1 > 0 and body1 / range1 < 0.3 and  # Doji
-                c2["close"] > c2["open"] and          # Bullish candle
-                body2 > body0 * 0.5):                 # Strong recovery
-            patterns.append({
-                "type": "Morning Doji Star",
-                "date": c2["date"],
-                "level_high": c1["high"],
-                "level_low": c1["low"],
-                "direction": "BULLISH",
-                "description": f"Retournement haussier détecté à {round(c1['low'], 5)}",
-            })
-
-    # Staircase (3+ consecutive higher lows and higher highs)
-    for i in range(4, len(candles)):
-        steps = candles[i - 4:i + 1]
-        higher_lows = all(steps[j]["low"] > steps[j - 1]["low"] for j in range(1, 5))
-        higher_highs = all(steps[j]["high"] > steps[j - 1]["high"] for j in range(1, 5))
-        lower_lows = all(steps[j]["low"] < steps[j - 1]["low"] for j in range(1, 5))
-        lower_highs = all(steps[j]["high"] < steps[j - 1]["high"] for j in range(1, 5))
-
-        if higher_lows and higher_highs:
-            patterns.append({
-                "type": "Staircase UP",
-                "date": steps[-1]["date"],
-                "level_high": steps[-1]["high"],
-                "level_low": steps[-2]["low"],
-                "direction": "BULLISH",
-                "description": "Escalier haussier — trend fort, acheter les pullbacks",
-            })
-        elif lower_lows and lower_highs:
-            patterns.append({
-                "type": "Staircase DOWN",
-                "date": steps[-1]["date"],
-                "level_high": steps[-2]["high"],
-                "level_low": steps[-1]["low"],
-                "direction": "BEARISH",
-                "description": "Escalier baissier — trend fort, vendre les rallyes",
-            })
-
-    # Grab the Bag (false breakout / institutional trap)
-    for i in range(2, len(candles)):
-        c_prev = candles[i - 1]
-        c_curr = candles[i]
-
-        # Check for wick rejection at highs (bull trap)
-        upper_wick = c_curr["high"] - max(c_curr["open"], c_curr["close"])
-        body = abs(c_curr["close"] - c_curr["open"])
-        if body > 0 and upper_wick > body * 2 and c_curr["high"] > max(highs[max(0, i - 10):i]):
-            patterns.append({
-                "type": "Grab the Bag (Bull Trap)",
-                "date": c_curr["date"],
-                "level_high": c_curr["high"],
-                "level_low": c_curr["close"],
-                "direction": "BEARISH",
-                "description": f"Faux breakout haussier à {round(c_curr['high'], 5)} — piège institutionnel",
-            })
-
-        # Check for wick rejection at lows (bear trap)
-        lower_wick = min(c_curr["open"], c_curr["close"]) - c_curr["low"]
-        if body > 0 and lower_wick > body * 2 and c_curr["low"] < min(lows[max(0, i - 10):i]):
-            patterns.append({
-                "type": "Grab the Bag (Bear Trap)",
-                "date": c_curr["date"],
-                "level_high": c_curr["close"],
-                "level_low": c_curr["low"],
-                "direction": "BULLISH",
-                "description": f"Faux breakout baissier à {round(c_curr['low'], 5)} — piège institutionnel",
-            })
 
     # ============================================================
     # SMOKE ZONES (from Read Through The Smoke)
@@ -293,9 +193,6 @@ def calculate_key_levels(candles, symbol):
     # Keep only last 5 smoke zones
     smoke_zones = smoke_zones[-5:]
 
-    # Keep only recent patterns (last 10)
-    recent_patterns = [p for p in patterns if p in patterns[-10:]]
-
     # ============================================================
     # SMART MONEY LEVELS (from COT data)
     # ============================================================
@@ -316,7 +213,7 @@ def calculate_key_levels(candles, symbol):
         "support_1": round(s1, 5),
         "support_2": round(s2, 5),
         "support_3": round(s3, 5),
-        "patterns": recent_patterns,
+        
         "smoke_zones": smoke_zones,
         "cot_levels": cot_levels,
         "data_source": "twelvedata",
