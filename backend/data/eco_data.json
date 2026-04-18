@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-17T15:38:39.538235",
+  "last_updated": "2026-04-18T09:37:55.629534",
   "total_events": 5,
   "high_impact_count": 4,
   "currency_scores": {
@@ -24,7 +24,7 @@
   },
   "events": [
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "08:30",
       "currency": "USD",
       "impact": "High",
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "08:30",
       "currency": "USD",
       "impact": "High",
@@ -74,7 +74,7 @@
       ]
     },
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "10:00",
       "currency": "USD",
       "impact": "Medium",
@@ -99,7 +99,7 @@
       ]
     },
     {
-      "date": "Sat Apr 18",
+      "date": "Sun Apr 19",
       "time": "03:00",
       "currency": "EUR",
       "impact": "High",
@@ -113,7 +113,7 @@
       ]
     },
     {
-      "date": "Sat Apr 18",
+      "date": "Sun Apr 19",
       "time": "09:30",
       "currency": "GBP",
       "impact": "High",
@@ -129,7 +129,7 @@
   ],
   "high_impact_events": [
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "08:30",
       "currency": "USD",
       "impact": "High",
@@ -154,7 +154,7 @@
       ]
     },
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "08:30",
       "currency": "USD",
       "impact": "High",
@@ -179,7 +179,7 @@
       ]
     },
     {
-      "date": "Sat Apr 18",
+      "date": "Sun Apr 19",
       "time": "03:00",
       "currency": "EUR",
       "impact": "High",
@@ -193,7 +193,7 @@
       ]
     },
     {
-      "date": "Sat Apr 18",
+      "date": "Sun Apr 19",
       "time": "09:30",
       "currency": "GBP",
       "impact": "High",
@@ -209,7 +209,7 @@
   ],
   "upcoming_events": [
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "08:30",
       "currency": "USD",
       "impact": "High",
@@ -234,7 +234,7 @@
       ]
     },
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "08:30",
       "currency": "USD",
       "impact": "High",
@@ -259,7 +259,7 @@
       ]
     },
     {
-      "date": "Fri Apr 17",
+      "date": "Sat Apr 18",
       "time": "10:00",
       "currency": "USD",
       "impact": "Medium",
@@ -284,7 +284,7 @@
       ]
     },
     {
-      "date": "Sat Apr 18",
+      "date": "Sun Apr 19",
       "time": "03:00",
       "currency": "EUR",
       "impact": "High",
@@ -298,7 +298,7 @@
       ]
     },
     {
-      "date": "Sat Apr 18",
+      "date": "Sun Apr 19",
       "time": "09:30",
       "currency": "GBP",
       "impact": "High",
