@@ -14,6 +14,8 @@ function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedSymbol, setSelectedSymbol] = useState(null);
+  const [levelsData, setLevelsData] = useState(null);
+  const [levelsLoading, setLevelsLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(null);
@@ -47,6 +49,16 @@ function App() {
     const interval = setInterval(() => fetchData(false), REFRESH_MS);
     return () => clearInterval(interval);
   }, [fetchData]);
+
+  // Fetch key levels when a symbol is selected
+  useEffect(() => {
+    if (!selectedSymbol) { setLevelsData(null); return; }
+    setLevelsLoading(true);
+    fetch(`${API}/api/levels/${encodeURIComponent(selectedSymbol)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { setLevelsData(d); setLevelsLoading(false); })
+      .catch(() => { setLevelsData(null); setLevelsLoading(false); });
+  }, [selectedSymbol]);
 
   // Data helpers
   const getSymbols = () => {
@@ -471,12 +483,25 @@ function App() {
       {/* DETAIL PANEL */}
       {selectedSymbol && (composite?.data?.[selectedSymbol] || cotData?.data?.[selectedSymbol]) && (() => {
         const d = composite?.data?.[selectedSymbol] || cotData?.data?.[selectedSymbol];
+        const lv = levelsData;
+        const fmt = (v, sym) => {
+          if (v == null) return '—';
+          const n = typeof v === 'number' ? v : parseFloat(v);
+          if (isNaN(n)) return '—';
+          if (['EUR/USD','GBP/USD','USD/CHF','AUD/USD','NZD/USD','USD/CAD'].includes(sym)) return n.toFixed(5);
+          if (sym === 'USD/JPY') return n.toFixed(3);
+          if (['Gold','Silver','S&P 500','Nasdaq 100','Dow Jones'].includes(sym)) return n.toFixed(2);
+          if (['Bitcoin','Ethereum'].includes(sym)) return n.toFixed(0);
+          return n.toFixed(4);
+        };
         return (
           <div className="card detail-card">
             <div className="card-header">
               <h2>{selectedSymbol} — Détail Complet</h2>
               <button className="btn-close" onClick={() => setSelectedSymbol(null)}>✕</button>
             </div>
+
+            {/* COT Metrics */}
             <div className="detail-grid">
               {[
                 ['Score Composite', getScore(d), getScore(d) >= 0 ? 'positive' : 'negative'],
@@ -494,6 +519,8 @@ function App() {
                 </div>
               ))}
             </div>
+
+            {/* COT History Chart */}
             <h3 style={{ color: '#94a3b8', margin: '20px 0 10px', fontSize: 13 }}>Historique Net — 8 semaines</h3>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={d.history?.map(h => ({ date: h.date?.slice(5, 10), net: h.smart_money?.net || 0 })).reverse()}>
@@ -505,12 +532,137 @@ function App() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+
+            {/* ===== KEY LEVELS SECTION ===== */}
+            <div className="levels-section">
+              <div className="section-title">Key Levels — Niveaux Clés</div>
+
+              {levelsLoading && <p className="muted" style={{ padding: 10 }}>Chargement des niveaux...</p>}
+
+              {!levelsLoading && lv && (
+                <>
+                  {/* Price + ATR + Range */}
+                  <div className="levels-grid">
+                    <div className="level-card price-card">
+                      <span className="level-label">Prix Actuel</span>
+                      <span className="level-value" style={{ color: 'var(--blue)' }}>{fmt(lv.current_price, selectedSymbol)}</span>
+                    </div>
+                    <div className="level-card">
+                      <span className="level-label">ATR (14)</span>
+                      <span className="level-value">{fmt(lv.atr_14, selectedSymbol)}</span>
+                    </div>
+                    <div className="level-card">
+                      <span className="level-label">Source</span>
+                      <span className="level-value" style={{ fontSize: 12, color: lv.data_source === 'twelvedata' ? 'var(--green)' : 'var(--amber)' }}>
+                        {lv.data_source === 'twelvedata' ? '● LIVE' : '⚠ FALLBACK'}
+                      </span>
+                    </div>
+                    <div className="level-card">
+                      <span className="level-label">Weekly High</span>
+                      <span className="level-value positive">{fmt(lv.weekly_high, selectedSymbol)}</span>
+                    </div>
+                    <div className="level-card">
+                      <span className="level-label">Weekly Low</span>
+                      <span className="level-value negative">{fmt(lv.weekly_low, selectedSymbol)}</span>
+                    </div>
+                    <div className="level-card">
+                      <span className="level-label">Monthly Range</span>
+                      <span className="level-value muted" style={{ fontSize: 11 }}>
+                        {fmt(lv.monthly_low, selectedSymbol)} — {fmt(lv.monthly_high, selectedSymbol)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Pivot / S/R Table */}
+                  <div className="subsection-title">Support / Résistance — Pivot Points</div>
+                  <div className="sr-table">
+                    <div className="sr-row header-row"><span>Niveau</span><span>Prix</span></div>
+                    <div className="sr-row resistance"><span>R3</span><span>{fmt(lv.resistance_3, selectedSymbol)}</span></div>
+                    <div className="sr-row resistance"><span>R2</span><span>{fmt(lv.resistance_2, selectedSymbol)}</span></div>
+                    <div className="sr-row resistance"><span>R1</span><span>{fmt(lv.resistance_1, selectedSymbol)}</span></div>
+                    <div className="sr-row pivot-row"><span>PIVOT</span><span>{fmt(lv.pivot, selectedSymbol)}</span></div>
+                    <div className="sr-row support"><span>S1</span><span>{fmt(lv.support_1, selectedSymbol)}</span></div>
+                    <div className="sr-row support"><span>S2</span><span>{fmt(lv.support_2, selectedSymbol)}</span></div>
+                    <div className="sr-row support"><span>S3</span><span>{fmt(lv.support_3, selectedSymbol)}</span></div>
+                  </div>
+
+                  {/* NRNR Patterns */}
+                  {lv.patterns && lv.patterns.length > 0 && (
+                    <>
+                      <div className="subsection-title">Patterns NRNR Détectés ({lv.patterns.length})</div>
+                      {lv.patterns.slice(-5).reverse().map((p, i) => (
+                        <div key={i} className={`pattern-card ${p.direction === 'BULLISH' ? 'pattern-bull' : p.direction === 'BEARISH' ? 'pattern-bear' : 'pattern-neutral'}`}>
+                          <div className="pattern-header">
+                            <span className="pattern-type">{p.type}</span>
+                            <span className="pattern-dir" style={{ color: p.direction === 'BULLISH' ? 'var(--green)' : p.direction === 'BEARISH' ? 'var(--red)' : 'var(--blue)' }}>
+                              {p.direction}
+                            </span>
+                          </div>
+                          <div className="pattern-desc">{p.description || `Détecté le ${p.date}`}</div>
+                          <div className="pattern-levels">
+                            {p.entry && <span>Entry: {fmt(p.entry, selectedSymbol)}</span>}
+                            {p.stop_loss && <span>SL: {fmt(p.stop_loss, selectedSymbol)}</span>}
+                            {p.target && <span>TP: {fmt(p.target, selectedSymbol)}</span>}
+                            {p.date && <span>📅 {p.date}</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Smoke Zones */}
+                  {lv.smoke_zones && lv.smoke_zones.length > 0 && (
+                    <>
+                      <div className="subsection-title">Smoke Zones — Pièges Institutionnels ({lv.smoke_zones.length})</div>
+                      {lv.smoke_zones.map((sz, i) => (
+                        <div key={i} className="smoke-card">
+                          <div className="smoke-range">
+                            {fmt(sz.low || sz.price_low, selectedSymbol)} — {fmt(sz.high || sz.price_high, selectedSymbol)}
+                          </div>
+                          <div className="smoke-desc">{sz.description || sz.type || 'Zone de manipulation potentielle'}</div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* COT Accumulation Levels */}
+                  {lv.cot_levels && lv.cot_levels.accumulation_weeks && lv.cot_levels.accumulation_weeks.length > 0 && (
+                    <>
+                      <div className="subsection-title">Smart Money — Accumulation/Distribution</div>
+                      {lv.cot_levels.accumulation_weeks.map((w, i) => (
+                        <div key={i} className="accum-card">
+                          <span className="muted">{w.date}</span>
+                          <span style={{ color: w.direction === 'ACCUMULATION' ? 'var(--green)' : 'var(--red)', fontWeight: 600, fontSize: 11 }}>
+                            {w.direction}
+                          </span>
+                          <span className="muted">{w.magnitude}% OI</span>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: w.sm_change >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                            {w.sm_change >= 0 ? '+' : ''}{w.sm_change?.toLocaleString()}
+                          </span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* No patterns message */}
+                  {(!lv.patterns || lv.patterns.length === 0) && (!lv.smoke_zones || lv.smoke_zones.length === 0) && (
+                    <p className="muted" style={{ padding: '10px 0', fontSize: 12 }}>
+                      Aucun pattern NRNR ni smoke zone détecté. {lv.data_source === 'fallback' ? 'Ajoutez la clé Twelve Data pour les données réelles.' : ''}
+                    </p>
+                  )}
+                </>
+              )}
+
+              {!levelsLoading && !lv && (
+                <p className="muted" style={{ padding: 10 }}>Niveaux indisponibles pour ce symbole.</p>
+              )}
+            </div>
           </div>
         );
       })()}
 
       <footer className="footer">
-        <p>QuantDash v2.0 — Auto-refresh {REFRESH_MS / 1000}s | CFTC COT + Economic Calendar + Retail Sentiment</p>
+        <p>QuantDash v3.0 — Auto-refresh {REFRESH_MS / 1000}s | CFTC COT + Economic Calendar + Retail Sentiment + Key Levels</p>
       </footer>
     </div>
   );
