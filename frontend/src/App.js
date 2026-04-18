@@ -386,17 +386,27 @@ function App() {
                   <thead><tr><th>Date</th><th>Heure</th><th>Devise</th><th>Impact</th><th>Événement</th><th>Actuel</th><th>Prévision</th><th>Précédent</th><th>Sentiment</th></tr></thead>
                   <tbody>
                     {highEvents.map((e, i) => (
-                      <tr key={i} className="table-row">
-                        <td className="muted">{e.date}</td>
-                        <td className="mono-cell">{e.time}</td>
-                        <td><span className="currency-badge">{e.currency}</span></td>
-                        <td>{impactDot(e.impact)}{e.impact}</td>
-                        <td style={{ fontWeight: 500 }}>{e.title}</td>
-                        <td className={e.actual ? 'positive' : 'muted'}>{e.actual || '—'}</td>
-                        <td className="muted">{e.forecast || '—'}</td>
-                        <td className="muted">{e.previous || '—'}</td>
-                        <td>{sentBadge(e.sentiment)}</td>
-                      </tr>
+                      <>
+                        <tr key={i} className="table-row">
+                          <td className="muted">{e.date}</td>
+                          <td className="mono-cell">{e.time}</td>
+                          <td><span className="currency-badge">{e.currency}</span></td>
+                          <td>{impactDot(e.impact)}{e.impact}</td>
+                          <td style={{ fontWeight: 500 }}>{e.title}</td>
+                          <td className={e.actual ? 'positive' : 'muted'}>{e.actual || '—'}</td>
+                          <td className="muted">{e.forecast || '—'}</td>
+                          <td className="muted">{e.previous || '—'}</td>
+                          <td>{sentBadge(e.sentiment)}</td>
+                        </tr>
+                        {e.impact_explanation && (
+                          <tr key={`exp-${i}`}>
+                            <td colSpan={9} className="explanation-row">
+                              <span className="explanation-icon">💬</span>
+                              {e.impact_explanation}
+                            </td>
+                          </tr>
+                        )}
+                      </>
                     ))}
                   </tbody>
                 </table>
@@ -411,17 +421,27 @@ function App() {
                 <thead><tr><th>Date</th><th>Heure</th><th>Devise</th><th>Impact</th><th>Événement</th><th>Actuel</th><th>Prévision</th><th>Précédent</th><th>Sentiment</th></tr></thead>
                 <tbody>
                   {allEvents.map((e, i) => (
-                    <tr key={i} className="table-row">
-                      <td className="muted">{e.date}</td>
-                      <td className="mono-cell">{e.time}</td>
-                      <td><span className="currency-badge">{e.currency}</span></td>
-                      <td>{impactDot(e.impact)}{e.impact}</td>
-                      <td style={{ fontWeight: 500 }}>{e.title}</td>
-                      <td className={e.actual ? 'positive' : 'muted'}>{e.actual || '—'}</td>
-                      <td className="muted">{e.forecast || '—'}</td>
-                      <td className="muted">{e.previous || '—'}</td>
-                      <td>{sentBadge(e.sentiment)}</td>
-                    </tr>
+                    <>
+                      <tr key={i} className="table-row">
+                        <td className="muted">{e.date}</td>
+                        <td className="mono-cell">{e.time}</td>
+                        <td><span className="currency-badge">{e.currency}</span></td>
+                        <td>{impactDot(e.impact)}{e.impact}</td>
+                        <td style={{ fontWeight: 500 }}>{e.title}</td>
+                        <td className={e.actual ? 'positive' : 'muted'}>{e.actual || '—'}</td>
+                        <td className="muted">{e.forecast || '—'}</td>
+                        <td className="muted">{e.previous || '—'}</td>
+                        <td>{sentBadge(e.sentiment)}</td>
+                      </tr>
+                      {e.impact_explanation && (
+                        <tr key={`exp-${i}`}>
+                          <td colSpan={9} className="explanation-row">
+                            <span className="explanation-icon">💬</span>
+                            {e.impact_explanation}
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   ))}
                 </tbody>
               </table>
