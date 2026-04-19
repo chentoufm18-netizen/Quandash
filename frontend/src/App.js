@@ -1,9 +1,43 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import './App.css';
 
 const API = 'https://quandash.onrender.com';
 const REFRESH_MS = 30000; // Auto-refresh every 30s
+
+// Widget TradingView — charge le script officiel une fois et embed le graphique
+function TradingViewWidget({ symbol }) {
+  const container = useRef(null);
+
+  useEffect(() => {
+    if (!container.current) return;
+    // Vide le container à chaque changement de symbole
+    container.current.innerHTML = '';
+
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      autosize: true,
+      symbol: symbol,
+      interval: 'D',
+      timezone: 'Europe/Paris',
+      theme: 'light',
+      style: '1',
+      locale: 'fr',
+      enable_publishing: false,
+      allow_symbol_change: false,
+      hide_side_toolbar: false,
+      studies: ['Volume@tv-basicstudies'],
+      support_host: 'https://www.tradingview.com',
+    });
+    container.current.appendChild(script);
+  }, [symbol]);
+
+  return (
+    <div className="tradingview-widget-container" ref={container} style={{ height: 420, width: '100%' }} />
+  );
+}
 
 function App() {
   const [composite, setComposite] = useState(null);
@@ -88,6 +122,33 @@ function App() {
     };
     const s = m[bias] || m.NEUTRAL;
     return <span style={{ background: s.bg, color: s.c, border: `1px solid ${s.b}`, padding: '2px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>{bias}</span>;
+  };
+
+  // Mapping symbole → ticker TradingView pour le widget graphique
+  const tvSymbol = (s) => {
+    const map = {
+      'EUR/USD': 'FX:EURUSD',
+      'GBP/USD': 'FX:GBPUSD',
+      'USD/JPY': 'FX:USDJPY',
+      'USD/CHF': 'FX:USDCHF',
+      'USD/CAD': 'FX:USDCAD',
+      'AUD/USD': 'FX:AUDUSD',
+      'NZD/USD': 'FX:NZDUSD',
+      'Gold': 'OANDA:XAUUSD',
+      'Silver': 'OANDA:XAGUSD',
+      'S&P 500': 'SP:SPX',
+      'Nasdaq 100': 'NASDAQ:NDX',
+      'Dow Jones': 'DJ:DJI',
+      'Bitcoin': 'BINANCE:BTCUSDT',
+      'Ethereum': 'BINANCE:ETHUSDT',
+      'Crude Oil WTI': 'TVC:USOIL',
+      'Natural Gas': 'TVC:NATGAS',
+      'Copper': 'COMEX:HG1!',
+      'Corn': 'CBOT:ZC1!',
+      'Wheat': 'CBOT:ZW1!',
+      'Soybeans': 'CBOT:ZS1!',
+    };
+    return map[s] || s;
   };
 
   const cats = [
@@ -613,6 +674,12 @@ function App() {
               </BarChart>
             </ResponsiveContainer>
 
+            {/* ===== TRADINGVIEW CHART ===== */}
+            <div className="levels-section">
+              <div className="section-title">Graphique Live — TradingView</div>
+              <TradingViewWidget symbol={tvSymbol(selectedSymbol)} />
+            </div>
+
             {/* ===== KEY LEVELS SECTION ===== */}
             <div className="levels-section">
               <div className="section-title">Key Levels — Niveaux Clés</div>
@@ -633,8 +700,8 @@ function App() {
                     </div>
                     <div className="level-card">
                       <span className="level-label">Source</span>
-                      <span className="level-value" style={{ fontSize: 12, color: lv.data_source === 'twelvedata' ? 'var(--green)' : lv.data_source === 'cached' ? 'var(--blue)' : 'var(--amber)' }}>
-                        {lv.data_source === 'twelvedata' ? '● LIVE' : lv.data_source === 'cached' ? '● CACHED' : '⚠ FALLBACK'}
+                      <span className="level-value" style={{ fontSize: 12, color: (lv.data_source === 'yahoo' || lv.data_source === 'twelvedata') ? 'var(--green)' : lv.data_source === 'cached' ? 'var(--blue)' : 'var(--amber)' }}>
+                        {(lv.data_source === 'yahoo' || lv.data_source === 'twelvedata') ? '● LIVE' : lv.data_source === 'cached' ? '● CACHED' : '⚠ FALLBACK'}
                       </span>
                     </div>
                     <div className="level-card">

@@ -1,85 +1,81 @@
 """
-Price Fetcher + Key Levels Calculator
-Récupère les prix via Twelve Data (gratuit) et calcule les niveaux clés
+Price Fetcher + Key Levels Calculator (v5 — Yahoo Finance)
+Récupère les prix via yfinance (données précises, gratuit, pas de clé)
 Basé sur : NRNR Playbook, Read Through The Smoke, Trading à Sens Unique
-Place ce fichier dans : ~/trading-dashboard/backend/levels_fetcher.py
 """
 
-import requests
 import json
 import os
 import time
 from datetime import datetime, timedelta
 
+import yfinance as yf
+
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
-# Twelve Data free tier: 800 requests/day, 8 per minute
-# Sign up at https://twelvedata.com for a free API key
-API_KEY = os.environ.get("TWELVE_DATA_KEY", "demo")
-
-# Symbol mapping for Twelve Data
+# Symbol mapping → tickers Yahoo Finance
+# Les vrais indices et futures sont disponibles (pas besoin d'ETF)
 SYMBOL_MAP = {
-    # Forex (spot) — toujours dispo sur free tier
-    "EUR/USD": "EUR/USD",
-    "GBP/USD": "GBP/USD",
-    "USD/JPY": "USD/JPY",
-    "USD/CHF": "USD/CHF",
-    "USD/CAD": "USD/CAD",
-    "AUD/USD": "AUD/USD",
-    "NZD/USD": "NZD/USD",
-    # Metals
-    "Gold": "XAU/USD",          # Spot accessible sur free tier
-    "Silver": "SLV",            # ETF (XAG/USD nécessite plan Pro)
-    # Indices → ETFs (plan gratuit n'a pas SPX/NDX/DJI directs)
-    "S&P 500": "SPY",
-    "Nasdaq 100": "QQQ",
-    "Dow Jones": "DIA",
-    # Crypto (spot)
-    "Bitcoin": "BTC/USD",
-    "Ethereum": "ETH/USD",
-    # Commodities → ETFs (plan gratuit n'a pas les futures)
-    "Crude Oil WTI": "USO",
-    "Natural Gas": "UNG",
-    "Copper": "CPER",
-    "Corn": "CORN",
-    "Wheat": "WEAT",
-    "Soybeans": "SOYB",
+    # Forex (spot) — suffixe "=X"
+    "EUR/USD": "EURUSD=X",
+    "GBP/USD": "GBPUSD=X",
+    "USD/JPY": "USDJPY=X",
+    "USD/CHF": "USDCHF=X",
+    "USD/CAD": "USDCAD=X",
+    "AUD/USD": "AUDUSD=X",
+    "NZD/USD": "NZDUSD=X",
+    # Metals (futures)
+    "Gold": "GC=F",              # Gold Futures (COMEX)
+    "Silver": "SI=F",            # Silver Futures (COMEX)
+    # Indices (vrais indices, préfixe "^")
+    "S&P 500": "^GSPC",          # S&P 500 index
+    "Nasdaq 100": "^NDX",        # Nasdaq 100 index
+    "Dow Jones": "^DJI",         # Dow Jones Industrial
+    # Crypto (suffixe "-USD")
+    "Bitcoin": "BTC-USD",
+    "Ethereum": "ETH-USD",
+    # Commodities (futures, suffixe "=F")
+    "Crude Oil WTI": "CL=F",     # Crude Oil WTI Futures
+    "Natural Gas": "NG=F",       # Natural Gas Futures
+    "Copper": "HG=F",            # Copper Futures
+    "Corn": "ZC=F",              # Corn Futures
+    "Wheat": "ZW=F",             # Wheat Futures
+    "Soybeans": "ZS=F",          # Soybeans Futures
 }
 
 
-def fetch_price_data(symbol, td_symbol, interval="1day", outputsize=200):
-    """Fetch OHLCV data from Twelve Data."""
-    url = "https://api.twelvedata.com/time_series"
-    params = {
-        "symbol": td_symbol,
-        "interval": interval,
-        "outputsize": outputsize,
-        "apikey": API_KEY,
-        "format": "JSON",
-    }
-
+def fetch_price_data(symbol, yf_symbol, period="6mo", interval="1d"):
+    """
+    Fetch OHLCV data depuis Yahoo Finance via yfinance.
+    - period="6mo" → 6 mois d'historique (assez pour weekly/monthly + ATR)
+    - interval="1d" → bougies quotidiennes
+    Retourne une liste de candles au même format que Twelve Data.
+    """
     try:
-        resp = requests.get(url, params=params, timeout=15)
-        data = resp.json()
+        ticker = yf.Ticker(yf_symbol)
+        df = ticker.history(period=period, interval=interval, auto_adjust=False)
 
-        if "values" not in data:
+        if df.empty or len(df) < 20:
             return None
 
         candles = []
-        for v in data["values"]:
+        for date, row in df.iterrows():
             candles.append({
-                "date": v["datetime"],
-                "open": float(v["open"]),
-                "high": float(v["high"]),
-                "low": float(v["low"]),
-                "close": float(v["close"]),
-                "volume": int(v.get("volume", 0)),
+                "date": date.strftime("%Y-%m-%d"),
+                "open": float(row["Open"]),
+                "high": float(row["High"]),
+                "low": float(row["Low"]),
+                "close": float(row["Close"]),
+                "volume": int(row.get("Volume", 0)) if row.get("Volume") else 0,
             })
 
+        # Reverse pour avoir le plus récent en premier (comme Twelve Data)
+        # (la fonction calculate_key_levels attend cet ordre)
+        candles.reverse()
         return candles
 
     except Exception as e:
-        print(f"  [PRICE] Error fetching {symbol}: {e}")
+        print(f"  [PRICE] Error fetching {symbol} ({yf_symbol}): {e}")
         return None
 
 
@@ -91,22 +87,22 @@ def generate_fallback_levels(symbol):
         "EUR/USD": 1.1700, "GBP/USD": 1.3500, "USD/JPY": 158.00,
         "USD/CHF": 0.8600, "USD/CAD": 1.4000, "AUD/USD": 0.6500,
         "NZD/USD": 0.5900,
-        # Metals
-        "Gold": 4800.00,       # XAU/USD spot
-        "Silver": 72.00,       # SLV ETF (~Silver spot × 0.9, donc ~$72 quand Silver=$80)
-        # Indices via ETFs
-        "S&P 500": 540.00,
-        "Nasdaq 100": 480.00,
-        "Dow Jones": 420.00,
+        # Metals (futures - prix proches du spot)
+        "Gold": 4800.00,         # GC=F ≈ XAU/USD
+        "Silver": 80.00,         # SI=F ≈ XAG/USD
+        # Vrais indices (pas les ETFs)
+        "S&P 500": 5400.00,      # ^GSPC S&P 500 index
+        "Nasdaq 100": 19000.00,  # ^NDX Nasdaq 100 index
+        "Dow Jones": 42000.00,   # ^DJI Dow Jones Industrial
         # Crypto
         "Bitcoin": 95000.00, "Ethereum": 3500.00,
-        # Commodities via ETFs
-        "Crude Oil WTI": 72.00,
-        "Natural Gas": 17.00,
-        "Copper": 28.00,
-        "Corn": 22.00,
-        "Wheat": 5.50,
-        "Soybeans": 22.00,
+        # Commodities (vraies futures)
+        "Crude Oil WTI": 72.00,  # CL=F
+        "Natural Gas": 3.50,     # NG=F
+        "Copper": 4.20,          # HG=F (prix par livre)
+        "Corn": 445.00,          # ZC=F (cents par bushel)
+        "Wheat": 560.00,         # ZW=F
+        "Soybeans": 1180.00,     # ZS=F
     }
 
     price = base_prices.get(symbol, 100.0)
@@ -115,7 +111,7 @@ def generate_fallback_levels(symbol):
     if symbol in ["Bitcoin", "Ethereum"]:
         atr_pct = 0.035
     elif symbol in ["Gold", "Silver"]:
-        atr_pct = 0.020  # Métaux : volatilité plus forte sur gros prix
+        atr_pct = 0.020
     elif symbol in ["S&P 500", "Nasdaq 100", "Dow Jones"]:
         atr_pct = 0.015
     elif symbol in ["Crude Oil WTI", "Natural Gas", "Copper", "Corn", "Wheat", "Soybeans"]:
@@ -378,37 +374,33 @@ def run():
     n_symbols = len(SYMBOL_MAP)
     n_live, n_cached, n_fallback = 0, 0, 0
 
-    for i, (symbol, td_symbol) in enumerate(SYMBOL_MAP.items()):
-        print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol}...", end=" ")
+    for i, (symbol, yf_symbol) in enumerate(SYMBOL_MAP.items()):
+        print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol} ({yf_symbol})...", end=" ", flush=True)
 
-        if API_KEY != "demo":
-            candles = fetch_price_data(symbol, td_symbol)
-            if candles and len(candles) >= 20:
-                levels = calculate_key_levels(candles, symbol)
-                print(f"✓ LIVE ({len(candles)} candles)")
-                n_live += 1
-            else:
-                # Fetch a échoué → essayer le cache précédent (dernières données LIVE réussies)
-                prev = cached_levels.get(symbol, {})
-                if prev.get("data_source") in ("twelvedata", "cached"):
-                    levels = dict(prev)
-                    levels["data_source"] = "cached"
-                    print(f"⚠ CACHED (dernières données LIVE)")
-                    n_cached += 1
-                else:
-                    levels = generate_fallback_levels(symbol)
-                    print(f"✗ FALLBACK (aucun cache)")
-                    n_fallback += 1
+        candles = fetch_price_data(symbol, yf_symbol)
+        if candles and len(candles) >= 20:
+            levels = calculate_key_levels(candles, symbol)
+            levels["data_source"] = "yahoo"
+            print(f"✓ LIVE ({len(candles)} candles)")
+            n_live += 1
         else:
-            levels = generate_fallback_levels(symbol)
-            print("fallback (demo key)")
-            n_fallback += 1
+            # Fetch a échoué → essayer le cache précédent (dernières données LIVE réussies)
+            prev = cached_levels.get(symbol, {})
+            if prev.get("data_source") in ("yahoo", "cached", "twelvedata"):
+                levels = dict(prev)
+                levels["data_source"] = "cached"
+                print(f"⚠ CACHED (dernières données LIVE)")
+                n_cached += 1
+            else:
+                levels = generate_fallback_levels(symbol)
+                print(f"✗ FALLBACK (aucun cache)")
+                n_fallback += 1
 
         all_levels[symbol] = levels
 
-        # Rate limit : Twelve Data free = 8 req/min = 7.5s entre calls
-        if i < n_symbols - 1 and API_KEY != "demo":
-            time.sleep(8)
+        # Petit délai pour éviter de spammer Yahoo (pas de vrai rate limit mais prudent)
+        if i < n_symbols - 1:
+            time.sleep(0.5)
 
     # Summary
     total_smoke = sum(len(l.get("smoke_zones", [])) for l in all_levels.values())
