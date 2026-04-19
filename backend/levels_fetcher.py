@@ -13,70 +13,77 @@ import yfinance as yf
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
-# Symbol mapping → tickers Yahoo Finance
-# Les vrais indices et futures sont disponibles (pas besoin d'ETF)
+# Symbol mapping → liste de tickers Yahoo Finance à essayer dans l'ordre
+# On essaye d'abord le spot, puis les futures en fallback, puis l'ETF
 SYMBOL_MAP = {
     # Forex (spot) — suffixe "=X"
-    "EUR/USD": "EURUSD=X",
-    "GBP/USD": "GBPUSD=X",
-    "USD/JPY": "USDJPY=X",
-    "USD/CHF": "USDCHF=X",
-    "USD/CAD": "USDCAD=X",
-    "AUD/USD": "AUDUSD=X",
-    "NZD/USD": "NZDUSD=X",
-    # Metals (futures)
-    "Gold": "GC=F",              # Gold Futures (COMEX)
-    "Silver": "SI=F",            # Silver Futures (COMEX)
+    "EUR/USD": ["EURUSD=X"],
+    "GBP/USD": ["GBPUSD=X"],
+    "USD/JPY": ["USDJPY=X"],
+    "USD/CHF": ["USDCHF=X"],
+    "USD/CAD": ["USDCAD=X"],
+    "AUD/USD": ["AUDUSD=X"],
+    "NZD/USD": ["NZDUSD=X"],
+    # Metals — SPOT d'abord (matche TradingView FOREX.com), futures en fallback
+    "Gold": ["XAUUSD=X", "GC=F", "GLD"],
+    "Silver": ["XAGUSD=X", "SI=F", "SLV"],
     # Indices (vrais indices, préfixe "^")
-    "S&P 500": "^GSPC",          # S&P 500 index
-    "Nasdaq 100": "^NDX",        # Nasdaq 100 index
-    "Dow Jones": "^DJI",         # Dow Jones Industrial
+    "S&P 500": ["^GSPC"],
+    "Nasdaq 100": ["^NDX"],
+    "Dow Jones": ["^DJI"],
     # Crypto (suffixe "-USD")
-    "Bitcoin": "BTC-USD",
-    "Ethereum": "ETH-USD",
-    # Commodities (futures, suffixe "=F")
-    "Crude Oil WTI": "CL=F",     # Crude Oil WTI Futures
-    "Natural Gas": "NG=F",       # Natural Gas Futures
-    "Copper": "HG=F",            # Copper Futures
-    "Corn": "ZC=F",              # Corn Futures
-    "Wheat": "ZW=F",             # Wheat Futures
-    "Soybeans": "ZS=F",          # Soybeans Futures
+    "Bitcoin": ["BTC-USD"],
+    "Ethereum": ["ETH-USD"],
+    # Commodities (futures, seul choix gratuit)
+    "Crude Oil WTI": ["CL=F"],
+    "Natural Gas": ["NG=F"],
+    "Copper": ["HG=F"],
+    "Corn": ["ZC=F"],
+    "Wheat": ["ZW=F"],
+    "Soybeans": ["ZS=F"],
 }
 
 
-def fetch_price_data(symbol, yf_symbol, period="6mo", interval="1d"):
+def fetch_price_data(symbol, yf_symbols, period="6mo", interval="1d"):
     """
-    Fetch OHLCV data depuis Yahoo Finance via yfinance.
-    - period="6mo" → 6 mois d'historique (assez pour weekly/monthly + ATR)
-    - interval="1d" → bougies quotidiennes
-    Retourne une liste de candles au même format que Twelve Data.
+    Fetch OHLCV data depuis Yahoo Finance.
+    yf_symbols : liste de tickers à essayer dans l'ordre (spot puis fallbacks).
+    Retourne la première liste de candles valide, ou None si tous échouent.
     """
-    try:
-        ticker = yf.Ticker(yf_symbol)
-        df = ticker.history(period=period, interval=interval, auto_adjust=False)
+    if isinstance(yf_symbols, str):
+        yf_symbols = [yf_symbols]
 
-        if df.empty or len(df) < 20:
-            return None
+    for yf_symbol in yf_symbols:
+        try:
+            ticker = yf.Ticker(yf_symbol)
+            df = ticker.history(period=period, interval=interval, auto_adjust=False)
 
-        candles = []
-        for date, row in df.iterrows():
-            candles.append({
-                "date": date.strftime("%Y-%m-%d"),
-                "open": float(row["Open"]),
-                "high": float(row["High"]),
-                "low": float(row["Low"]),
-                "close": float(row["Close"]),
-                "volume": int(row.get("Volume", 0)) if row.get("Volume") else 0,
-            })
+            if df.empty or len(df) < 20:
+                continue  # Essaye le ticker suivant
 
-        # Reverse pour avoir le plus récent en premier (comme Twelve Data)
-        # (la fonction calculate_key_levels attend cet ordre)
-        candles.reverse()
-        return candles
+            candles = []
+            for date, row in df.iterrows():
+                candles.append({
+                    "date": date.strftime("%Y-%m-%d"),
+                    "open": float(row["Open"]),
+                    "high": float(row["High"]),
+                    "low": float(row["Low"]),
+                    "close": float(row["Close"]),
+                    "volume": int(row.get("Volume", 0)) if row.get("Volume") else 0,
+                })
 
-    except Exception as e:
-        print(f"  [PRICE] Error fetching {symbol} ({yf_symbol}): {e}")
-        return None
+            candles.reverse()  # plus récent en premier
+            # Log quel ticker a fonctionné (utile pour debug)
+            if yf_symbol != yf_symbols[0]:
+                print(f"(via {yf_symbol})", end=" ", flush=True)
+            return candles
+
+        except Exception as e:
+            print(f"[{yf_symbol}: {str(e)[:40]}]", end=" ", flush=True)
+            continue
+
+    return None
+
 
 
 def generate_fallback_levels(symbol):
@@ -374,10 +381,11 @@ def run():
     n_symbols = len(SYMBOL_MAP)
     n_live, n_cached, n_fallback = 0, 0, 0
 
-    for i, (symbol, yf_symbol) in enumerate(SYMBOL_MAP.items()):
-        print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol} ({yf_symbol})...", end=" ", flush=True)
+    for i, (symbol, yf_tickers) in enumerate(SYMBOL_MAP.items()):
+        primary = yf_tickers[0] if isinstance(yf_tickers, list) else yf_tickers
+        print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol} ({primary})...", end=" ", flush=True)
 
-        candles = fetch_price_data(symbol, yf_symbol)
+        candles = fetch_price_data(symbol, yf_tickers)
         if candles and len(candles) >= 20:
             levels = calculate_key_levels(candles, symbol)
             levels["data_source"] = "yahoo"
