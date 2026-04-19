@@ -9,7 +9,7 @@ import requests
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
@@ -47,7 +47,7 @@ SYMBOL_MAP = {
 }
 
 
-def fetch_price_data(symbol, td_symbol, interval="1day", outputsize=100):
+def fetch_price_data(symbol, td_symbol, interval="1day", outputsize=200):
     """Fetch OHLCV data from Twelve Data."""
     url = "https://api.twelvedata.com/time_series"
     params = {
@@ -170,13 +170,45 @@ def calculate_key_levels(candles, symbol):
     # ATR (14 periods)
     atr_14 = calculate_atr(candles, 14)
 
-    # Weekly high/low (last 5 candles on daily)
-    week_high = max(highs[-5:])
-    week_low = min(lows[-5:])
+    # Weekly / Monthly ranges basés sur les VRAIES dates calendaires
+    # (et non pas sur un nombre fixe de candles, ce qui donnait des ranges faux en milieu de semaine)
+    now = datetime.now()
+    monday_iso = now - timedelta(days=now.weekday())        # lundi de la semaine courante
+    month_start = now.replace(day=1)                         # 1er jour du mois courant
 
-    # Monthly high/low (last 22 candles)
-    month_high = max(highs[-22:])
-    month_low = min(lows[-22:])
+    # Helper : parser la date de la candle (format "YYYY-MM-DD" ou "YYYY-MM-DD HH:MM:SS")
+    def parse_candle_date(c):
+        d = c.get("date", "")
+        try:
+            return datetime.fromisoformat(d.split(" ")[0])
+        except Exception:
+            try:
+                return datetime.strptime(d[:10], "%Y-%m-%d")
+            except Exception:
+                return None
+
+    # Collecter les candles de cette semaine
+    week_candles = []
+    month_candles = []
+    for c in candles:
+        cd = parse_candle_date(c)
+        if cd is None:
+            continue
+        if cd >= monday_iso.replace(hour=0, minute=0, second=0, microsecond=0):
+            week_candles.append(c)
+        if cd >= month_start.replace(hour=0, minute=0, second=0, microsecond=0):
+            month_candles.append(c)
+
+    # Fallback si parsing échoue (garde le comportement précédent avec [-5:] et [-22:])
+    if not week_candles:
+        week_candles = candles[-5:]
+    if not month_candles:
+        month_candles = candles[-22:]
+
+    week_high = max(c["high"] for c in week_candles)
+    week_low = min(c["low"] for c in week_candles)
+    month_high = max(c["high"] for c in month_candles)
+    month_low = min(c["low"] for c in month_candles)
 
     # Classic pivot points (floor method)
     prev = candles[-2]
