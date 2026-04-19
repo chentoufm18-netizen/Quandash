@@ -1,43 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import './App.css';
 
 const API = 'https://quandash.onrender.com';
 const REFRESH_MS = 30000; // Auto-refresh every 30s
-
-// Widget TradingView — charge le script officiel une fois et embed le graphique
-function TradingViewWidget({ symbol }) {
-  const container = useRef(null);
-
-  useEffect(() => {
-    if (!container.current) return;
-    // Vide le container à chaque changement de symbole
-    container.current.innerHTML = '';
-
-    const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: symbol,
-      interval: 'D',
-      timezone: 'Europe/Paris',
-      theme: 'light',
-      style: '1',
-      locale: 'fr',
-      enable_publishing: false,
-      allow_symbol_change: false,
-      hide_side_toolbar: false,
-      studies: ['Volume@tv-basicstudies'],
-      support_host: 'https://www.tradingview.com',
-    });
-    container.current.appendChild(script);
-  }, [symbol]);
-
-  return (
-    <div className="tradingview-widget-container" ref={container} style={{ height: 420, width: '100%' }} />
-  );
-}
 
 function App() {
   const [composite, setComposite] = useState(null);
@@ -122,33 +88,6 @@ function App() {
     };
     const s = m[bias] || m.NEUTRAL;
     return <span style={{ background: s.bg, color: s.c, border: `1px solid ${s.b}`, padding: '2px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>{bias}</span>;
-  };
-
-  // Mapping symbole → ticker TradingView pour le widget graphique
-  const tvSymbol = (s) => {
-    const map = {
-      'EUR/USD': 'FX:EURUSD',
-      'GBP/USD': 'FX:GBPUSD',
-      'USD/JPY': 'FX:USDJPY',
-      'USD/CHF': 'FX:USDCHF',
-      'USD/CAD': 'FX:USDCAD',
-      'AUD/USD': 'FX:AUDUSD',
-      'NZD/USD': 'FX:NZDUSD',
-      'Gold': 'OANDA:XAUUSD',
-      'Silver': 'OANDA:XAGUSD',
-      'S&P 500': 'SP:SPX',
-      'Nasdaq 100': 'NASDAQ:NDX',
-      'Dow Jones': 'DJ:DJI',
-      'Bitcoin': 'BINANCE:BTCUSDT',
-      'Ethereum': 'BINANCE:ETHUSDT',
-      'Crude Oil WTI': 'TVC:USOIL',
-      'Natural Gas': 'TVC:NATGAS',
-      'Copper': 'COMEX:HG1!',
-      'Corn': 'CBOT:ZC1!',
-      'Wheat': 'CBOT:ZW1!',
-      'Soybeans': 'CBOT:ZS1!',
-    };
-    return map[s] || s;
   };
 
   const cats = [
@@ -268,66 +207,45 @@ function App() {
       {/* ===== OVERVIEW TAB ===== */}
       {activeTab === 'overview' && (
         <>
-          <div className="card chart-card">
+          <div className="card">
             <div className="card-header">
-              <h2>Composite Score — Tous les Actifs</h2>
-              <div className="category-tabs">
-                {cats.map(c => (
-                  <button key={c.key} className={`tab ${activeCategory === c.key ? 'active' : ''}`} onClick={() => setActiveCategory(c.key)}>
-                    <span className="tab-icon">{c.icon}</span> {c.label}
-                  </button>
-                ))}
-              </div>
+              <h2>Sélectionner un instrument</h2>
+              <span className="muted" style={{ fontSize: 12 }}>Vue détaillée complète pour la paire choisie</span>
             </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 60, left: 20 }}>
-                <XAxis dataKey="name" tick={{ fill: '#6b7280', fontSize: 11 }} angle={-45} textAnchor="end" interval={0} />
-                <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} domain={[-100, 100]} ticks={[-100, -50, 0, 50, 100]} />
-                <Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 8, color: '#111827', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }} formatter={v => [`${v}`, 'Score']} />
-                <Bar dataKey="score" radius={[4, 4, 0, 0]}>
-                  {chartData.map((e, i) => <Cell key={i} fill={scoreColor(e.score)} />)}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
 
-          <div className="card table-card">
-            <div className="card-header"><h2>Tableau de Bord — Scoring Composite</h2></div>
-            <div className="table-wrapper">
-              <table className="data-table">
-                <thead><tr>
-                  <th>Symbole</th><th>Cat.</th><th>Score</th><th>Biais</th>
-                  <th>COT</th><th>Éco</th><th>Sent.</th><th>SM Net</th><th>SM Δ</th>
-                </tr></thead>
-                <tbody>
-                  {[...symbols].sort((a, b) => getScore(b) - getScore(a)).map((s, i) => (
-                    <tr key={i} className={`table-row ${selectedSymbol === s.symbol ? 'selected' : ''}`}
-                        onClick={() => setSelectedSymbol(selectedSymbol === s.symbol ? null : s.symbol)}>
-                      <td className="symbol-cell">{s.symbol}</td>
-                      <td><span className={`cat-badge ${s.category}`}>{s.category}</span></td>
-                      <td>
-                        <div className="score-bar-wrapper">
-                          <div className="score-bar" style={{
-                            width: `${Math.abs(getScore(s)) / 2}%`,
-                            background: scoreColor(getScore(s)),
-                            marginLeft: getScore(s) < 0 ? `${50 - Math.abs(getScore(s)) / 2}%` : '50%',
-                          }} />
-                          <span className="score-value">{getScore(s) > 0 ? '+' : ''}{getScore(s)}</span>
-                        </div>
-                      </td>
-                      <td>{biasTag(getBias(s))}</td>
-                      <td className="mono-cell">{s.cot_score ?? s.sentiment_score ?? '—'}</td>
-                      <td className="mono-cell">{s.eco_score ?? '—'}</td>
-                      <td className="mono-cell">{s.sentiment_score !== undefined && s.retail_long_pct ? s.sentiment_score : '—'}</td>
-                      <td className={s.smart_money_net >= 0 ? 'positive' : 'negative'}>{s.smart_money_net?.toLocaleString()}</td>
-                      <td className={s.smart_money_change >= 0 ? 'positive' : 'negative'}>
-                        {s.smart_money_change >= 0 ? '+' : ''}{s.smart_money_change?.toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="symbol-selector">
+              {cats.map(c => (
+                <button
+                  key={c.key}
+                  className={`symbol-cat-btn ${activeCategory === c.key ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(c.key)}>
+                  <span className="tab-icon">{c.icon}</span> {c.label}
+                </button>
+              ))}
             </div>
+
+            <div className="symbol-grid">
+              {[...symbols].sort((a, b) => getScore(b) - getScore(a)).map((s, i) => (
+                <button
+                  key={i}
+                  className={`symbol-pill ${selectedSymbol === s.symbol ? 'selected' : ''}`}
+                  onClick={() => setSelectedSymbol(selectedSymbol === s.symbol ? null : s.symbol)}>
+                  <div className="symbol-pill-top">
+                    <span className="symbol-pill-name">{s.symbol}</span>
+                    {biasTag(getBias(s))}
+                  </div>
+                  <div className="symbol-pill-score" style={{ color: scoreColor(getScore(s)) }}>
+                    {getScore(s) > 0 ? '+' : ''}{getScore(s)}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {!selectedSymbol && (
+              <p className="muted" style={{ padding: '24px 10px 8px', fontSize: 13, textAlign: 'center' }}>
+                👆 Cliquez sur un instrument ci-dessus pour voir son analyse complète
+              </p>
+            )}
           </div>
         </>
       )}
@@ -673,12 +591,6 @@ function App() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-
-            {/* ===== TRADINGVIEW CHART ===== */}
-            <div className="levels-section">
-              <div className="section-title">Graphique Live — TradingView</div>
-              <TradingViewWidget symbol={tvSymbol(selectedSymbol)} />
-            </div>
 
             {/* ===== KEY LEVELS SECTION ===== */}
             <div className="levels-section">
