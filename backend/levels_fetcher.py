@@ -1,7 +1,8 @@
 """
-Price Fetcher + Key Levels Calculator (v5 — Yahoo Finance)
-Récupère les prix via yfinance (données précises, gratuit, pas de clé)
-Basé sur : NRNR Playbook, Read Through The Smoke, Trading à Sens Unique
+Price Fetcher + Key Levels Calculator (v6 — Yahoo Finance + Twelve Data spot metals)
+Stratégie hybride :
+  - Gold/Silver : Twelve Data spot (XAU/USD, XAG/USD) → matche TradingView FOREX.com
+  - Tout le reste : yfinance (forex, indices, crypto, commodities futures)
 """
 
 import json
@@ -9,14 +10,17 @@ import os
 import time
 from datetime import datetime, timedelta
 
+import requests
 import yfinance as yf
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
+# Twelve Data pour les spot metals (XAU/USD, XAG/USD)
+TD_API_KEY = os.environ.get("TWELVE_DATA_KEY", "")
+
 # Symbol mapping → liste de tickers Yahoo Finance à essayer dans l'ordre
-# On essaye d'abord le spot, puis les futures en fallback, puis l'ETF
 SYMBOL_MAP = {
-    # Forex (spot) — suffixe "=X"
+    # Forex (spot)
     "EUR/USD": ["EURUSD=X"],
     "GBP/USD": ["GBPUSD=X"],
     "USD/JPY": ["USDJPY=X"],
@@ -24,17 +28,17 @@ SYMBOL_MAP = {
     "USD/CAD": ["USDCAD=X"],
     "AUD/USD": ["AUDUSD=X"],
     "NZD/USD": ["NZDUSD=X"],
-    # Metals — SPOT d'abord (matche TradingView FOREX.com), futures en fallback
-    "Gold": ["XAUUSD=X", "GC=F", "GLD"],
-    "Silver": ["XAGUSD=X", "SI=F", "SLV"],
-    # Indices (vrais indices, préfixe "^")
+    # Metals → Twelve Data (XAU/USD spot) en priorité, GC=F/SI=F en fallback yfinance
+    "Gold": ["GC=F", "GLD"],
+    "Silver": ["SI=F", "SLV"],
+    # Indices
     "S&P 500": ["^GSPC"],
     "Nasdaq 100": ["^NDX"],
     "Dow Jones": ["^DJI"],
-    # Crypto (suffixe "-USD")
+    # Crypto
     "Bitcoin": ["BTC-USD"],
     "Ethereum": ["ETH-USD"],
-    # Commodities (futures, seul choix gratuit)
+    # Commodities (futures)
     "Crude Oil WTI": ["CL=F"],
     "Natural Gas": ["NG=F"],
     "Copper": ["HG=F"],
@@ -43,13 +47,72 @@ SYMBOL_MAP = {
     "Soybeans": ["ZS=F"],
 }
 
+# Mapping Twelve Data pour les métaux spot
+TWELVE_SPOT_MAP = {
+    "Gold": "XAU/USD",
+    "Silver": "XAG/USD",
+}
+
+
+def fetch_twelvedata_spot(symbol, outputsize=150):
+    """Fetch spot metals (XAU/USD, XAG/USD) depuis Twelve Data.
+    Matche les prix FOREX.com / TradingView."""
+    if not TD_API_KEY:
+        return None
+
+    td_symbol = TWELVE_SPOT_MAP.get(symbol)
+    if not td_symbol:
+        return None
+
+    try:
+        resp = requests.get(
+            "https://api.twelvedata.com/time_series",
+            params={
+                "symbol": td_symbol,
+                "interval": "1day",
+                "outputsize": outputsize,
+                "apikey": TD_API_KEY,
+                "format": "JSON",
+            },
+            timeout=15,
+        )
+        data = resp.json()
+        if "values" not in data:
+            return None
+
+        candles = []
+        for v in data["values"]:
+            candles.append({
+                "date": v["datetime"],
+                "open": float(v["open"]),
+                "high": float(v["high"]),
+                "low": float(v["low"]),
+                "close": float(v["close"]),
+                "volume": int(v.get("volume", 0) or 0),
+            })
+        # Twelve Data retourne déjà du plus récent au plus ancien → ordre OK
+        return candles
+
+    except Exception as e:
+        print(f"[TD {td_symbol}: {str(e)[:40]}]", end=" ", flush=True)
+        return None
+
 
 def fetch_price_data(symbol, yf_symbols, period="6mo", interval="1d"):
     """
-    Fetch OHLCV data depuis Yahoo Finance.
-    yf_symbols : liste de tickers à essayer dans l'ordre (spot puis fallbacks).
-    Retourne la première liste de candles valide, ou None si tous échouent.
+    Fetch OHLCV depuis la meilleure source disponible.
+    1. Pour Gold/Silver : essaye Twelve Data XAU/USD spot d'abord (matche TV FOREX.com)
+    2. Puis yfinance (liste de tickers à essayer)
+    Retourne la première source qui fournit >= 20 candles, ou None si tout échoue.
     """
+    # Gold & Silver → spot Twelve Data en priorité
+    if symbol in TWELVE_SPOT_MAP:
+        candles = fetch_twelvedata_spot(symbol)
+        if candles and len(candles) >= 20:
+            print(f"(via TD spot)", end=" ", flush=True)
+            return candles
+
+    # Tout le reste (ou fallback metals) : yfinance avec fallback multi-tickers
     if isinstance(yf_symbols, str):
         yf_symbols = [yf_symbols]
 
@@ -59,7 +122,7 @@ def fetch_price_data(symbol, yf_symbols, period="6mo", interval="1d"):
             df = ticker.history(period=period, interval=interval, auto_adjust=False)
 
             if df.empty or len(df) < 20:
-                continue  # Essaye le ticker suivant
+                continue
 
             candles = []
             for date, row in df.iterrows():
@@ -73,7 +136,6 @@ def fetch_price_data(symbol, yf_symbols, period="6mo", interval="1d"):
                 })
 
             candles.reverse()  # plus récent en premier
-            # Log quel ticker a fonctionné (utile pour debug)
             if yf_symbol != yf_symbols[0]:
                 print(f"(via {yf_symbol})", end=" ", flush=True)
             return candles
