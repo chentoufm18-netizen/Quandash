@@ -1,8 +1,8 @@
 """
-Price Fetcher + Key Levels Calculator (v6 — Yahoo Finance + Twelve Data spot metals)
-Stratégie hybride :
-  - Gold/Silver : Twelve Data spot (XAU/USD, XAG/USD) → matche TradingView FOREX.com
-  - Tout le reste : yfinance (forex, indices, crypto, commodities futures)
+Price Fetcher + Key Levels Calculator (v7 — Yahoo spot metals)
+Utilise les tickers Yahoo XAUUSD=X / XAGUSD=X qui existent bel et bien
+(voir https://finance.yahoo.com/quote/XAUUSD=X/ — prix spot matching TradingView)
+Fallback : Twelve Data spot, puis GC=F/SI=F futures, puis ETFs.
 """
 
 import json
@@ -15,10 +15,10 @@ import yfinance as yf
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
-# Twelve Data pour les spot metals (XAU/USD, XAG/USD)
+# Twelve Data utilisé en fallback pour Gold/Silver spot si Yahoo XAUUSD=X échoue
 TD_API_KEY = os.environ.get("TWELVE_DATA_KEY", "")
 
-# Symbol mapping → liste de tickers Yahoo Finance à essayer dans l'ordre
+# Mapping symbole → liste de tickers Yahoo Finance à essayer dans l'ordre
 SYMBOL_MAP = {
     # Forex (spot)
     "EUR/USD": ["EURUSD=X"],
@@ -28,9 +28,9 @@ SYMBOL_MAP = {
     "USD/CAD": ["USDCAD=X"],
     "AUD/USD": ["AUDUSD=X"],
     "NZD/USD": ["NZDUSD=X"],
-    # Metals → Twelve Data (XAU/USD spot) en priorité, GC=F/SI=F en fallback yfinance
-    "Gold": ["GC=F", "GLD"],
-    "Silver": ["SI=F", "SLV"],
+    # Metals : Yahoo spot d'abord (confirmé existant), puis futures, puis ETF
+    "Gold": ["XAUUSD=X", "GC=F", "GLD"],
+    "Silver": ["XAGUSD=X", "SI=F", "SLV"],
     # Indices
     "S&P 500": ["^GSPC"],
     "Nasdaq 100": ["^NDX"],
@@ -47,23 +47,52 @@ SYMBOL_MAP = {
     "Soybeans": ["ZS=F"],
 }
 
-# Mapping Twelve Data pour les métaux spot
+# Symboles pour Twelve Data (fallback 2 pour Gold/Silver)
 TWELVE_SPOT_MAP = {
     "Gold": "XAU/USD",
     "Silver": "XAG/USD",
 }
 
+# Seuil minimum de candles (baissé à 10 pour tolérer les tickers à historique plus court)
+MIN_CANDLES = 10
 
-def fetch_twelvedata_spot(symbol, outputsize=150):
-    """Fetch spot metals (XAU/USD, XAG/USD) depuis Twelve Data.
-    Matche les prix FOREX.com / TradingView."""
-    if not TD_API_KEY:
+
+def fetch_yahoo(yf_symbol, period="6mo"):
+    """Tentative de fetch via yfinance."""
+    try:
+        ticker = yf.Ticker(yf_symbol)
+        df = ticker.history(period=period, interval="1d", auto_adjust=False)
+        if df.empty or len(df) < MIN_CANDLES:
+            return None
+
+        candles = []
+        for date, row in df.iterrows():
+            # Skip lignes avec valeurs NaN
+            if row.isna().any():
+                continue
+            candles.append({
+                "date": date.strftime("%Y-%m-%d"),
+                "open": float(row["Open"]),
+                "high": float(row["High"]),
+                "low": float(row["Low"]),
+                "close": float(row["Close"]),
+                "volume": int(row.get("Volume", 0)) if row.get("Volume") else 0,
+            })
+        if len(candles) < MIN_CANDLES:
+            return None
+        candles.reverse()
+        return candles
+    except Exception:
         return None
 
+
+def fetch_twelvedata_spot(symbol, outputsize=150):
+    """Fallback Twelve Data pour XAU/USD et XAG/USD."""
+    if not TD_API_KEY:
+        return None
     td_symbol = TWELVE_SPOT_MAP.get(symbol)
     if not td_symbol:
         return None
-
     try:
         resp = requests.get(
             "https://api.twelvedata.com/time_series",
@@ -79,7 +108,6 @@ def fetch_twelvedata_spot(symbol, outputsize=150):
         data = resp.json()
         if "values" not in data:
             return None
-
         candles = []
         for v in data["values"]:
             candles.append({
@@ -90,59 +118,41 @@ def fetch_twelvedata_spot(symbol, outputsize=150):
                 "close": float(v["close"]),
                 "volume": int(v.get("volume", 0) or 0),
             })
-        # Twelve Data retourne déjà du plus récent au plus ancien → ordre OK
         return candles
-
-    except Exception as e:
-        print(f"[TD {td_symbol}: {str(e)[:40]}]", end=" ", flush=True)
+    except Exception:
         return None
 
 
 def fetch_price_data(symbol, yf_symbols, period="6mo", interval="1d"):
     """
-    Fetch OHLCV depuis la meilleure source disponible.
-    1. Pour Gold/Silver : essaye Twelve Data XAU/USD spot d'abord (matche TV FOREX.com)
-    2. Puis yfinance (liste de tickers à essayer)
-    Retourne la première source qui fournit >= 20 candles, ou None si tout échoue.
+    Chaîne de sources dans l'ordre :
+    1. yfinance avec le ticker primary (ex: XAUUSD=X pour Gold = spot)
+    2. yfinance avec les tickers fallback (ex: GC=F futures, GLD ETF)
+    3. Twelve Data XAU/USD spot (si TD_API_KEY set et pour Gold/Silver)
+    Affiche clairement quelle source a réussi.
     """
-    # Gold & Silver → spot Twelve Data en priorité
-    if symbol in TWELVE_SPOT_MAP:
-        candles = fetch_twelvedata_spot(symbol)
-        if candles and len(candles) >= 20:
-            print(f"(via TD spot)", end=" ", flush=True)
-            return candles
-
-    # Tout le reste (ou fallback metals) : yfinance avec fallback multi-tickers
     if isinstance(yf_symbols, str):
         yf_symbols = [yf_symbols]
 
-    for yf_symbol in yf_symbols:
-        try:
-            ticker = yf.Ticker(yf_symbol)
-            df = ticker.history(period=period, interval=interval, auto_adjust=False)
+    # 1. yfinance ticker primary
+    candles = fetch_yahoo(yf_symbols[0], period)
+    if candles:
+        print(f"(Yahoo {yf_symbols[0]})", end=" ", flush=True)
+        return candles
 
-            if df.empty or len(df) < 20:
-                continue
-
-            candles = []
-            for date, row in df.iterrows():
-                candles.append({
-                    "date": date.strftime("%Y-%m-%d"),
-                    "open": float(row["Open"]),
-                    "high": float(row["High"]),
-                    "low": float(row["Low"]),
-                    "close": float(row["Close"]),
-                    "volume": int(row.get("Volume", 0)) if row.get("Volume") else 0,
-                })
-
-            candles.reverse()  # plus récent en premier
-            if yf_symbol != yf_symbols[0]:
-                print(f"(via {yf_symbol})", end=" ", flush=True)
+    # 2. Pour Gold/Silver : tenter Twelve Data spot avant les fallbacks futures
+    if symbol in TWELVE_SPOT_MAP:
+        candles = fetch_twelvedata_spot(symbol)
+        if candles:
+            print(f"(TD spot {TWELVE_SPOT_MAP[symbol]})", end=" ", flush=True)
             return candles
 
-        except Exception as e:
-            print(f"[{yf_symbol}: {str(e)[:40]}]", end=" ", flush=True)
-            continue
+    # 3. yfinance autres tickers de fallback
+    for yf_symbol in yf_symbols[1:]:
+        candles = fetch_yahoo(yf_symbol, period)
+        if candles:
+            print(f"(Yahoo fallback {yf_symbol})", end=" ", flush=True)
+            return candles
 
     return None
 
