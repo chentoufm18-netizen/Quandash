@@ -19,6 +19,7 @@ API_KEY = os.environ.get("TWELVE_DATA_KEY", "demo")
 
 # Symbol mapping for Twelve Data
 SYMBOL_MAP = {
+    # Forex (spot) — toujours dispo sur free tier
     "EUR/USD": "EUR/USD",
     "GBP/USD": "GBP/USD",
     "USD/JPY": "USD/JPY",
@@ -26,19 +27,23 @@ SYMBOL_MAP = {
     "USD/CAD": "USD/CAD",
     "AUD/USD": "AUD/USD",
     "NZD/USD": "NZD/USD",
+    # Metals (spot) — XAU/XAG dispo sur free tier
     "Gold": "XAU/USD",
     "Silver": "XAG/USD",
-    "S&P 500": "SPX",
-    "Nasdaq 100": "NDX",
-    "Dow Jones": "DJI",
+    # Indices → ETFs (plan gratuit n'a pas SPX/NDX/DJI directs)
+    "S&P 500": "SPY",
+    "Nasdaq 100": "QQQ",
+    "Dow Jones": "DIA",
+    # Crypto (spot)
     "Bitcoin": "BTC/USD",
     "Ethereum": "ETH/USD",
-    "Crude Oil WTI": "CL",
-    "Natural Gas": "NG",
-    "Copper": "HG",
-    "Corn": "ZC",
-    "Wheat": "ZW",
-    "Soybeans": "ZS",
+    # Commodities → ETFs (plan gratuit n'a pas les futures)
+    "Crude Oil WTI": "USO",
+    "Natural Gas": "UNG",
+    "Copper": "CPER",
+    "Corn": "CORN",
+    "Wheat": "WEAT",
+    "Soybeans": "SOYB",
 }
 
 
@@ -79,27 +84,41 @@ def fetch_price_data(symbol, td_symbol, interval="1day", outputsize=100):
 
 
 def generate_fallback_levels(symbol):
-    """Generate realistic key levels when API is unavailable."""
-    # Base prices by symbol (approximate current levels)
+    """Generate realistic key levels when API is unavailable.
+    Prix approximatifs pour 2026 — mis à jour manuellement."""
     base_prices = {
-        "EUR/USD": 1.0850, "GBP/USD": 1.2650, "USD/JPY": 154.50,
-        "USD/CHF": 0.8820, "USD/CAD": 1.3750, "AUD/USD": 0.6450,
-        "NZD/USD": 0.5950, "Gold": 2350.00, "Silver": 28.50,
-        "S&P 500": 5200.00, "Nasdaq 100": 18100.00, "Dow Jones": 38500.00,
-        "Bitcoin": 65000.00, "Ethereum": 3200.00, "Crude Oil WTI": 78.50,
-        "Natural Gas": 2.15, "Copper": 4.25, "Corn": 445.00,
-        "Wheat": 560.00, "Soybeans": 1180.00,
+        # Forex (spot)
+        "EUR/USD": 1.0850, "GBP/USD": 1.2900, "USD/JPY": 150.50,
+        "USD/CHF": 0.8850, "USD/CAD": 1.3850, "AUD/USD": 0.6500,
+        "NZD/USD": 0.5900,
+        # Metals (spot)
+        "Gold": 3300.00, "Silver": 32.00,
+        # Indices via ETFs
+        "S&P 500": 540.00,        # SPY ~540 = S&P500 ~5400
+        "Nasdaq 100": 480.00,     # QQQ ~480 = NDX ~19200
+        "Dow Jones": 420.00,      # DIA ~420 = DJI ~42000
+        # Crypto
+        "Bitcoin": 95000.00, "Ethereum": 3500.00,
+        # Commodities via ETFs
+        "Crude Oil WTI": 72.00,   # USO approximatif
+        "Natural Gas": 17.00,     # UNG
+        "Copper": 28.00,          # CPER
+        "Corn": 22.00,            # CORN
+        "Wheat": 5.50,            # WEAT
+        "Soybeans": 22.00,        # SOYB
     }
 
     price = base_prices.get(symbol, 100.0)
 
-    # Calculate levels based on typical ATR percentages
-    if symbol in ["Gold", "Silver", "S&P 500", "Nasdaq 100", "Dow Jones", "Bitcoin", "Ethereum"]:
-        atr_pct = 0.015  # 1.5% for volatile assets
-    elif symbol in ["Crude Oil WTI", "Natural Gas"]:
-        atr_pct = 0.025  # 2.5% for commodities
+    # ATR percentages adaptés au type d'asset
+    if symbol in ["Bitcoin", "Ethereum"]:
+        atr_pct = 0.035  # Crypto très volatil
+    elif symbol in ["Gold", "Silver", "S&P 500", "Nasdaq 100", "Dow Jones"]:
+        atr_pct = 0.015
+    elif symbol in ["Crude Oil WTI", "Natural Gas", "Copper", "Corn", "Wheat", "Soybeans"]:
+        atr_pct = 0.025
     else:
-        atr_pct = 0.008  # 0.8% for forex
+        atr_pct = 0.008  # Forex
 
     atr = price * atr_pct
 
@@ -309,44 +328,60 @@ def run():
     print("  KEY LEVELS CALCULATOR — Trading Dashboard")
     print("=" * 55)
 
+    # Charge le cache précédent pour fallback intelligent
+    cache_file = os.path.join(DATA_DIR, "levels_data.json")
+    cached_levels = {}
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                cached_data = json.load(f)
+                cached_levels = cached_data.get("levels", {})
+        except Exception:
+            pass
+
     all_levels = {}
     n_symbols = len(SYMBOL_MAP)
+    n_live, n_cached, n_fallback = 0, 0, 0
 
     for i, (symbol, td_symbol) in enumerate(SYMBOL_MAP.items()):
         print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol}...", end=" ")
 
         if API_KEY != "demo":
             candles = fetch_price_data(symbol, td_symbol)
-            if candles:
+            if candles and len(candles) >= 20:
                 levels = calculate_key_levels(candles, symbol)
                 print(f"✓ LIVE ({len(candles)} candles)")
+                n_live += 1
             else:
-                levels = generate_fallback_levels(symbol)
-                print("fallback (API error)")
+                # Fetch a échoué → essayer le cache précédent (dernières données LIVE réussies)
+                prev = cached_levels.get(symbol, {})
+                if prev.get("data_source") in ("twelvedata", "cached"):
+                    levels = dict(prev)
+                    levels["data_source"] = "cached"
+                    print(f"⚠ CACHED (dernières données LIVE)")
+                    n_cached += 1
+                else:
+                    levels = generate_fallback_levels(symbol)
+                    print(f"✗ FALLBACK (aucun cache)")
+                    n_fallback += 1
         else:
             levels = generate_fallback_levels(symbol)
             print("fallback (demo key)")
+            n_fallback += 1
 
         all_levels[symbol] = levels
 
-        # Rate limit : Twelve Data free = 8 req/min = 7.5s between calls
-        # Skip sleep on last iteration
+        # Rate limit : Twelve Data free = 8 req/min = 7.5s entre calls
         if i < n_symbols - 1 and API_KEY != "demo":
             time.sleep(8)
 
     # Summary
-    total_patterns = sum(len(l.get("patterns", [])) for l in all_levels.values())
     total_smoke = sum(len(l.get("smoke_zones", [])) for l in all_levels.values())
 
     print(f"\n  {'─' * 50}")
-    print(f"  {len(all_levels)} symboles | {total_patterns} patterns | {total_smoke} smoke zones")
+    print(f"  {len(all_levels)} symboles | {total_smoke} smoke zones")
+    print(f"  LIVE: {n_live}  |  CACHED: {n_cached}  |  FALLBACK: {n_fallback}")
     print(f"  {'─' * 50}")
-
-    for sym, l in all_levels.items():
-        patterns = l.get("patterns", [])
-        if patterns:
-            latest = patterns[-1]
-            print(f"  {sym:15s} | {latest['type']:25s} | {latest['direction']}")
 
     save_results(all_levels)
     print(f"\n{'=' * 55}")

@@ -645,8 +645,8 @@ function App() {
                     </div>
                     <div className="level-card">
                       <span className="level-label">Source</span>
-                      <span className="level-value" style={{ fontSize: 12, color: lv.data_source === 'twelvedata' ? 'var(--green)' : 'var(--amber)' }}>
-                        {lv.data_source === 'twelvedata' ? '● LIVE' : '⚠ FALLBACK'}
+                      <span className="level-value" style={{ fontSize: 12, color: lv.data_source === 'twelvedata' ? 'var(--green)' : lv.data_source === 'cached' ? 'var(--blue)' : 'var(--amber)' }}>
+                        {lv.data_source === 'twelvedata' ? '● LIVE' : lv.data_source === 'cached' ? '● CACHED' : '⚠ FALLBACK'}
                       </span>
                     </div>
                     <div className="level-card">
