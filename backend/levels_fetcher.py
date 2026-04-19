@@ -85,35 +85,38 @@ def fetch_price_data(symbol, td_symbol, interval="1day", outputsize=100):
 
 def generate_fallback_levels(symbol):
     """Generate realistic key levels when API is unavailable.
-    Prix approximatifs pour 2026 — mis à jour manuellement."""
+    Prix avril 2026 (basés sur TradingView au 17 avr. 2026)."""
     base_prices = {
-        # Forex (spot)
-        "EUR/USD": 1.0850, "GBP/USD": 1.2900, "USD/JPY": 150.50,
-        "USD/CHF": 0.8850, "USD/CAD": 1.3850, "AUD/USD": 0.6500,
+        # Forex (spot) — avril 2026
+        "EUR/USD": 1.1700, "GBP/USD": 1.3500, "USD/JPY": 158.00,
+        "USD/CHF": 0.8600, "USD/CAD": 1.4000, "AUD/USD": 0.6500,
         "NZD/USD": 0.5900,
-        # Metals (spot)
-        "Gold": 3300.00, "Silver": 32.00,
+        # Metals (spot) — avril 2026
+        "Gold": 4800.00,       # XAU/USD ~$4800 (vérifié TradingView)
+        "Silver": 80.00,       # XAG/USD ~$80 (vérifié TradingView)
         # Indices via ETFs
-        "S&P 500": 540.00,        # SPY ~540 = S&P500 ~5400
-        "Nasdaq 100": 480.00,     # QQQ ~480 = NDX ~19200
-        "Dow Jones": 420.00,      # DIA ~420 = DJI ~42000
+        "S&P 500": 540.00,
+        "Nasdaq 100": 480.00,
+        "Dow Jones": 420.00,
         # Crypto
         "Bitcoin": 95000.00, "Ethereum": 3500.00,
         # Commodities via ETFs
-        "Crude Oil WTI": 72.00,   # USO approximatif
-        "Natural Gas": 17.00,     # UNG
-        "Copper": 28.00,          # CPER
-        "Corn": 22.00,            # CORN
-        "Wheat": 5.50,            # WEAT
-        "Soybeans": 22.00,        # SOYB
+        "Crude Oil WTI": 72.00,
+        "Natural Gas": 17.00,
+        "Copper": 28.00,
+        "Corn": 22.00,
+        "Wheat": 5.50,
+        "Soybeans": 22.00,
     }
 
     price = base_prices.get(symbol, 100.0)
 
     # ATR percentages adaptés au type d'asset
     if symbol in ["Bitcoin", "Ethereum"]:
-        atr_pct = 0.035  # Crypto très volatil
-    elif symbol in ["Gold", "Silver", "S&P 500", "Nasdaq 100", "Dow Jones"]:
+        atr_pct = 0.035
+    elif symbol in ["Gold", "Silver"]:
+        atr_pct = 0.020  # Métaux : volatilité plus forte sur gros prix
+    elif symbol in ["S&P 500", "Nasdaq 100", "Dow Jones"]:
         atr_pct = 0.015
     elif symbol in ["Crude Oil WTI", "Natural Gas", "Copper", "Corn", "Wheat", "Soybeans"]:
         atr_pct = 0.025
