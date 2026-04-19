@@ -90,17 +90,6 @@ function App() {
     return <span style={{ background: s.bg, color: s.c, border: `1px solid ${s.b}`, padding: '2px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>{bias}</span>;
   };
 
-  const impactDot = (imp) => {
-    const c = { High: '#dc2626', Medium: '#d97706', Low: '#9ca3af' };
-    return <span style={{ color: c[imp] || '#9ca3af', marginRight: 4 }}>●</span>;
-  };
-
-  const sentBadge = (s) => {
-    const m = { BULLISH: { bg: '#dcfce7', c: '#15803d' }, BEARISH: { bg: '#fee2e2', c: '#dc2626' }, NEUTRAL: { bg: '#f3f4f6', c: '#6b7280' }, PENDING: { bg: '#fef3c7', c: '#d97706' } };
-    const st = m[s] || m.NEUTRAL;
-    return <span style={{ background: st.bg, color: st.c, padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600 }}>{s}</span>;
-  };
-
   const cats = [
     { key: 'all', label: 'Tous', icon: '◉' },
     { key: 'forex', label: 'Forex', icon: '💱' },
@@ -128,7 +117,6 @@ function App() {
   }));
 
   const highEvents = ecoData?.high_impact_events || [];
-  const allEvents = ecoData?.events || [];
   const currScores = ecoData?.currency_scores || {};
   const sentSymbols = sentData?.data || {};
 

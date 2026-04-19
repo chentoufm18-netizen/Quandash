@@ -27,9 +27,9 @@ SYMBOL_MAP = {
     "USD/CAD": "USD/CAD",
     "AUD/USD": "AUD/USD",
     "NZD/USD": "NZD/USD",
-    # Metals (spot) — XAU/XAG dispo sur free tier
-    "Gold": "XAU/USD",
-    "Silver": "XAG/USD",
+    # Metals
+    "Gold": "XAU/USD",          # Spot accessible sur free tier
+    "Silver": "SLV",            # ETF (XAG/USD nécessite plan Pro)
     # Indices → ETFs (plan gratuit n'a pas SPX/NDX/DJI directs)
     "S&P 500": "SPY",
     "Nasdaq 100": "QQQ",
@@ -91,9 +91,9 @@ def generate_fallback_levels(symbol):
         "EUR/USD": 1.1700, "GBP/USD": 1.3500, "USD/JPY": 158.00,
         "USD/CHF": 0.8600, "USD/CAD": 1.4000, "AUD/USD": 0.6500,
         "NZD/USD": 0.5900,
-        # Metals (spot) — avril 2026
-        "Gold": 4800.00,       # XAU/USD ~$4800 (vérifié TradingView)
-        "Silver": 80.00,       # XAG/USD ~$80 (vérifié TradingView)
+        # Metals
+        "Gold": 4800.00,       # XAU/USD spot
+        "Silver": 72.00,       # SLV ETF (~Silver spot × 0.9, donc ~$72 quand Silver=$80)
         # Indices via ETFs
         "S&P 500": 540.00,
         "Nasdaq 100": 480.00,
