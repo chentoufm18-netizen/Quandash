@@ -8,6 +8,7 @@ Place ce fichier dans : ~/trading-dashboard/backend/levels_fetcher.py
 import requests
 import json
 import os
+import time
 from datetime import datetime
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -309,23 +310,29 @@ def run():
     print("=" * 55)
 
     all_levels = {}
+    n_symbols = len(SYMBOL_MAP)
 
-    for symbol, td_symbol in SYMBOL_MAP.items():
-        print(f"  [LEVELS] {symbol}...", end=" ")
+    for i, (symbol, td_symbol) in enumerate(SYMBOL_MAP.items()):
+        print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol}...", end=" ")
 
         if API_KEY != "demo":
             candles = fetch_price_data(symbol, td_symbol)
             if candles:
                 levels = calculate_key_levels(candles, symbol)
-                print(f"✓ {len(candles)} candles, {len(levels.get('patterns', []))} patterns")
+                print(f"✓ LIVE ({len(candles)} candles)")
             else:
                 levels = generate_fallback_levels(symbol)
-                print("fallback (no data)")
+                print("fallback (API error)")
         else:
             levels = generate_fallback_levels(symbol)
             print("fallback (demo key)")
 
         all_levels[symbol] = levels
+
+        # Rate limit : Twelve Data free = 8 req/min = 7.5s between calls
+        # Skip sleep on last iteration
+        if i < n_symbols - 1 and API_KEY != "demo":
+            time.sleep(8)
 
     # Summary
     total_patterns = sum(len(l.get("patterns", [])) for l in all_levels.values())

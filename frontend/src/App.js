@@ -351,100 +351,55 @@ function App() {
       {/* ===== ECO TAB ===== */}
       {activeTab === 'eco' && (
         <>
-          <div className="card">
-            <div className="card-header">
-              <h2>Scores Économiques par Devise</h2>
-            </div>
-            <div className="currency-scores-grid">
-              {Object.entries(currScores).sort((a, b) => b[1].normalized - a[1].normalized).map(([cur, d], i) => (
-                <div key={i} className="currency-score-card">
-                  <div className="currency-name">{cur}</div>
-                  <div className="currency-score-bar-wrap">
-                    <div className="currency-score-bar" style={{
-                      width: `${Math.max(3, Math.abs(d.normalized) / 2)}%`,
-                      background: d.normalized >= 0 ? '#16a34a' : '#dc2626',
-                      marginLeft: d.normalized < 0 ? `${50 - Math.abs(d.normalized) / 2}%` : '50%',
-                    }} />
-                  </div>
-                  <div className={`currency-score-val ${d.normalized > 0 ? 'positive' : d.normalized < 0 ? 'negative' : 'muted'}`}>
-                    {d.normalized > 0 ? '+' : ''}{d.normalized.toFixed(1)}
-                  </div>
-                  <div className="currency-events">{d.high_impact}🔴 / {d.events} evt</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {highEvents.length > 0 && (
+          {Object.keys(currScores).length > 0 && (
             <div className="card">
               <div className="card-header">
-                <h2>Événements High Impact</h2>
-                <span className="impact-badge">{highEvents.length} événements</span>
+                <h2>Scores Économiques par Devise</h2>
+                <span className="muted" style={{ fontSize: 12 }}>Basé sur les news publiées de la semaine</span>
               </div>
-              <div className="table-wrapper">
-                <table className="data-table">
-                  <thead><tr><th>Date</th><th>Heure</th><th>Devise</th><th>Impact</th><th>Événement</th><th>Actuel</th><th>Prévision</th><th>Précédent</th><th>Sentiment</th></tr></thead>
-                  <tbody>
-                    {highEvents.map((e, i) => (
-                      <>
-                        <tr key={i} className="table-row">
-                          <td className="muted">{e.date}</td>
-                          <td className="mono-cell">{e.time}</td>
-                          <td><span className="currency-badge">{e.currency}</span></td>
-                          <td>{impactDot(e.impact)}{e.impact}</td>
-                          <td style={{ fontWeight: 500 }}>{e.title}</td>
-                          <td className={e.actual ? 'positive' : 'muted'}>{e.actual || '—'}</td>
-                          <td className="muted">{e.forecast || '—'}</td>
-                          <td className="muted">{e.previous || '—'}</td>
-                          <td>{sentBadge(e.sentiment)}</td>
-                        </tr>
-                        {e.impact_explanation && (
-                          <tr key={`exp-${i}`}>
-                            <td colSpan={9} className="explanation-row">
-                              <span className="explanation-icon">💬</span>
-                              {e.impact_explanation}
-                            </td>
-                          </tr>
-                        )}
-                      </>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="currency-scores-grid">
+                {Object.entries(currScores).sort((a, b) => b[1].normalized - a[1].normalized).map(([cur, d], i) => (
+                  <div key={i} className="currency-score-card">
+                    <div className="currency-name">{cur}</div>
+                    <div className="currency-score-bar-wrap">
+                      <div className="currency-score-bar" style={{
+                        width: `${Math.max(3, Math.abs(d.normalized) / 2)}%`,
+                        background: d.normalized >= 0 ? '#16a34a' : '#dc2626',
+                        marginLeft: d.normalized < 0 ? `${50 - Math.abs(d.normalized) / 2}%` : '50%',
+                      }} />
+                    </div>
+                    <div className={`currency-score-val ${d.normalized > 0 ? 'positive' : d.normalized < 0 ? 'negative' : 'muted'}`}>
+                      {d.normalized > 0 ? '+' : ''}{d.normalized.toFixed(1)}
+                    </div>
+                    <div className="currency-events">{d.high_impact}🔴 / {d.events} evt</div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
           <div className="card">
-            <div className="card-header"><h2>Tous les Événements</h2><span className="muted" style={{ fontSize: 12 }}>{allEvents.length} événements</span></div>
-            <div className="table-wrapper">
-              <table className="data-table">
-                <thead><tr><th>Date</th><th>Heure</th><th>Devise</th><th>Impact</th><th>Événement</th><th>Actuel</th><th>Prévision</th><th>Précédent</th><th>Sentiment</th></tr></thead>
-                <tbody>
-                  {allEvents.map((e, i) => (
-                    <>
-                      <tr key={i} className="table-row">
-                        <td className="muted">{e.date}</td>
-                        <td className="mono-cell">{e.time}</td>
-                        <td><span className="currency-badge">{e.currency}</span></td>
-                        <td>{impactDot(e.impact)}{e.impact}</td>
-                        <td style={{ fontWeight: 500 }}>{e.title}</td>
-                        <td className={e.actual ? 'positive' : 'muted'}>{e.actual || '—'}</td>
-                        <td className="muted">{e.forecast || '—'}</td>
-                        <td className="muted">{e.previous || '—'}</td>
-                        <td>{sentBadge(e.sentiment)}</td>
-                      </tr>
-                      {e.impact_explanation && (
-                        <tr key={`exp-${i}`}>
-                          <td colSpan={9} className="explanation-row">
-                            <span className="explanation-icon">💬</span>
-                            {e.impact_explanation}
-                          </td>
-                        </tr>
-                      )}
-                    </>
-                  ))}
-                </tbody>
-              </table>
+            <div className="card-header">
+              <h2>Calendrier Économique Live</h2>
+              <span className="muted" style={{ fontSize: 12 }}>🟢 Données en temps réel • Investing.com</span>
+            </div>
+            <div style={{ position: 'relative', width: '100%', overflow: 'hidden', borderRadius: 8, border: '0.5px solid #e5e7eb' }}>
+              <iframe
+                src="https://sslecal2.investing.com/?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5&calType=week&timeZone=58&lang=5"
+                width="100%"
+                height="700"
+                frameBorder="0"
+                allowTransparency="true"
+                title="Calendrier Économique"
+                style={{ display: 'block' }}
+              />
+            </div>
+            <div style={{ fontSize: 11, color: '#6b7280', padding: '10px 4px 0', lineHeight: 1.5 }}>
+              Widget officiel Investing.com — Powered by{' '}
+              <a href="https://fr.investing.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none' }}>
+                Investing.com
+              </a>
+              . Actuals, forecasts et previous mis à jour en temps réel.
             </div>
           </div>
         </>
