@@ -177,8 +177,13 @@ def refresh_all():
 
 def init_data():
     try:
-        if not os.path.exists(os.path.join(DATA_DIR, "cot_data.json")):
-            fetch_cot()
+        # COT : TOUJOURS rafraîchir au démarrage
+        # Render free tier repart du code Git à chaque restart → les données
+        # locales sont celles du commit, pas les plus récentes de la CFTC.
+        # Le zip CFTC fait ~2Mo, ça prend <5s à télécharger.
+        print("[INIT] Fetching fresh COT data from CFTC...")
+        fetch_cot()
+
         fetch_eco()
         fetch_sentiment()
         compute_scores()
