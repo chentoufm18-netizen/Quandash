@@ -229,7 +229,7 @@ def calculate_key_levels(candles, symbol):
     - Read Through The Smoke: Institutional traps, fake breakouts
     - Trading à Sens Unique: S/R zones, pivot points, ATR levels
     """
-    if not candles or len(candles) < 20:
+    if not candles or len(candles) < MIN_CANDLES:
         return generate_fallback_levels(symbol)
 
     # Sort chronologically (oldest first)
@@ -285,15 +285,40 @@ def calculate_key_levels(candles, symbol):
     month_high = max(c["high"] for c in month_candles)
     month_low = min(c["low"] for c in month_candles)
 
-    # Classic pivot points (floor method)
-    prev = candles[-2]
-    pivot = (prev["high"] + prev["low"] + prev["close"]) / 3
-    r1 = 2 * pivot - prev["low"]
-    r2 = pivot + (prev["high"] - prev["low"])
-    r3 = prev["high"] + 2 * (pivot - prev["low"])
-    s1 = 2 * pivot - prev["high"]
-    s2 = pivot - (prev["high"] - prev["low"])
-    s3 = prev["low"] - 2 * (prev["high"] - pivot)
+    # ============================================================
+    # WEEKLY PIVOT POINTS (Floor Method)
+    # Basé sur le H/L/C de la SEMAINE PRÉCÉDENTE (pas la bougie d'hier)
+    # Donne des niveaux exploitables pour le swing trading
+    # ============================================================
+    prev_monday = monday_iso - timedelta(days=7)
+    prev_week_candles = []
+    for c in candles:
+        cd = parse_candle_date(c)
+        if cd is None:
+            continue
+        cd_clean = cd.replace(hour=0, minute=0, second=0, microsecond=0)
+        mon_clean = prev_monday.replace(hour=0, minute=0, second=0, microsecond=0)
+        fri_clean = mon_clean + timedelta(days=4)  # Vendredi
+        if mon_clean <= cd_clean <= fri_clean:
+            prev_week_candles.append(c)
+
+    if prev_week_candles:
+        pw_high = max(c["high"] for c in prev_week_candles)
+        pw_low = min(c["low"] for c in prev_week_candles)
+        pw_close = prev_week_candles[-1]["close"]  # Close du vendredi
+    else:
+        # Fallback : dernières 5 candles complètes
+        pw_high = max(highs[-10:-5]) if len(highs) >= 10 else max(highs[-5:])
+        pw_low = min(lows[-10:-5]) if len(lows) >= 10 else min(lows[-5:])
+        pw_close = closes[-6] if len(closes) >= 6 else closes[-2]
+
+    pivot = (pw_high + pw_low + pw_close) / 3
+    r1 = 2 * pivot - pw_low
+    r2 = pivot + (pw_high - pw_low)
+    r3 = pw_high + 2 * (pivot - pw_low)
+    s1 = 2 * pivot - pw_high
+    s2 = pivot - (pw_high - pw_low)
+    s3 = pw_low - 2 * (pw_high - pivot)
 
 
 
@@ -346,13 +371,13 @@ def calculate_key_levels(candles, symbol):
         
         "smoke_zones": smoke_zones,
         "cot_levels": cot_levels,
-        "data_source": "twelvedata",
+        "data_source": "live",
     }
 
 
 def calculate_atr(candles, period=14):
-    """Average True Range."""
-    if len(candles) < period + 1:
+    """Average True Range. S'adapte si moins de candles que la période."""
+    if len(candles) < 2:
         return 0
 
     trs = []
@@ -364,7 +389,9 @@ def calculate_atr(candles, period=14):
         )
         trs.append(tr)
 
-    return sum(trs[-period:]) / period
+    # Utilise le nombre de périodes disponibles si moins que 'period'
+    n = min(period, len(trs))
+    return sum(trs[-n:]) / n
 
 
 def calculate_cot_levels(symbol):
@@ -435,8 +462,13 @@ def save_results(all_levels):
 
 def run():
     print("=" * 55)
-    print("  KEY LEVELS CALCULATOR — Trading Dashboard")
+    print("  KEY LEVELS CALCULATOR — Trading Dashboard (v7)")
     print("=" * 55)
+    print(f"  Config: MIN_CANDLES={MIN_CANDLES}")
+    print(f"  Config: TWELVE_DATA_KEY={'SET ✓' if TD_API_KEY else 'NOT SET — Gold/Silver may use futures'}")
+    print(f"  Config: Gold tickers = {SYMBOL_MAP['Gold']}")
+    print(f"  Config: Silver tickers = {SYMBOL_MAP['Silver']}")
+    print()
 
     # Charge le cache précédent pour fallback intelligent
     cache_file = os.path.join(DATA_DIR, "levels_data.json")
@@ -458,7 +490,7 @@ def run():
         print(f"  [LEVELS] [{i+1}/{n_symbols}] {symbol} ({primary})...", end=" ", flush=True)
 
         candles = fetch_price_data(symbol, yf_tickers)
-        if candles and len(candles) >= 20:
+        if candles and len(candles) >= MIN_CANDLES:
             levels = calculate_key_levels(candles, symbol)
             levels["data_source"] = "yahoo"
             print(f"✓ LIVE ({len(candles)} candles)")

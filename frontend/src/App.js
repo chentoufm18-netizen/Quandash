@@ -612,8 +612,8 @@ function App() {
                     </div>
                     <div className="level-card">
                       <span className="level-label">Source</span>
-                      <span className="level-value" style={{ fontSize: 12, color: (lv.data_source === 'yahoo' || lv.data_source === 'twelvedata') ? 'var(--green)' : lv.data_source === 'cached' ? 'var(--blue)' : 'var(--amber)' }}>
-                        {(lv.data_source === 'yahoo' || lv.data_source === 'twelvedata') ? '● LIVE' : lv.data_source === 'cached' ? '● CACHED' : '⚠ FALLBACK'}
+                      <span className="level-value" style={{ fontSize: 12, color: ['yahoo','twelvedata','live'].includes(lv.data_source) ? 'var(--green)' : lv.data_source === 'cached' ? 'var(--blue)' : 'var(--amber)' }}>
+                        {['yahoo','twelvedata','live'].includes(lv.data_source) ? '● LIVE' : lv.data_source === 'cached' ? '● CACHED' : '⚠ FALLBACK'}
                       </span>
                     </div>
                     <div className="level-card">
@@ -633,7 +633,7 @@ function App() {
                   </div>
 
                   {/* Pivot / S/R Table */}
-                  <div className="subsection-title">Support / Résistance — Pivot Points</div>
+                  <div className="subsection-title">Support / Résistance — Pivots Hebdomadaires</div>
                   <div className="sr-table">
                     <div className="sr-row header-row"><span>Niveau</span><span>Prix</span></div>
                     <div className="sr-row resistance"><span>R3</span><span>{fmt(lv.resistance_3, selectedSymbol)}</span></div>
