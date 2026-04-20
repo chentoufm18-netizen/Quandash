@@ -375,9 +375,24 @@ function App() {
       {/* ===== SENTIMENT TAB ===== */}
       {activeTab === 'sentiment' && (
         <>
+          {/* Live widget Dukascopy SWFX — données temps réel d'une banque suisse */}
           <div className="card">
             <div className="card-header">
-              <h2>Sentiment Retail — Positionnement Contrarian</h2>
+              <h2>Sentiment Retail Live — Dukascopy SWFX</h2>
+              <span className="muted" style={{ fontSize: 12 }}>Données temps réel — positionnement des traders retail</span>
+            </div>
+            <div style={{ width: '100%', overflow: 'hidden', borderRadius: 8 }}>
+              <iframe
+                title="Dukascopy SWFX Sentiment"
+                src="https://www.dukascopy.com/plugins/fxMarketWatch/?swfx_index=&availableInstruments=EUR/USD,GBP/USD,USD/JPY,USD/CHF,AUD/USD,NZD/USD,USD/CAD,XAU/USD"
+                style={{ width: '100%', height: 420, border: 'none' }}
+              />
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <h2>Analyse Contrarian — Scoring QuantDash</h2>
               <span className="muted" style={{ fontSize: 12 }}>⚠️ = Foule en extrême (signal contrarian fort)</span>
             </div>
             <div className="table-wrapper">

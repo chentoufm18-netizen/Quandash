@@ -169,10 +169,10 @@ def run():
     print("  RETAIL SENTIMENT FETCHER — Trading Dashboard")
     print("=" * 55)
 
-    sentiment = fetch_myfxbook_sentiment()
-    if not sentiment:
-        print("  [SENT] Scraping vide, utilisation des données de référence...")
-        sentiment = get_fallback_sentiment()
+    # Données de référence (estimation basée sur les tendances typiques)
+    # Le widget Dukascopy SWFX dans le frontend affiche les données live
+    print("  [SENT] Utilisation des données de référence (live via widget frontend)")
+    sentiment = get_fallback_sentiment()
 
     cot_path = os.path.join(DATA_DIR, "cot_data.json")
     signals = calculate_contrarian_signals(sentiment, cot_path)
