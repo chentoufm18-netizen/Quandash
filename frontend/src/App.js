@@ -1,9 +1,29 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import './App.css';
 
 const API = 'https://quandash.onrender.com';
 const REFRESH_MS = 30000;
+
+// Widget Myfxbook Community Outlook — charge le script officiel
+function MyfxbookOutlook() {
+  const container = useRef(null);
+  useEffect(() => {
+    if (!container.current) return;
+    container.current.innerHTML = '';
+    const script = document.createElement('script');
+    script.className = 'powered';
+    script.src = 'https://widgets.myfxbook.com/scripts/fxOutlook.js?type=1&symbols=,1,2,3,4,5,6,7,8,9,10,11,29';
+    container.current.appendChild(script);
+    const link = document.createElement('div');
+    link.style.fontSize = '10px';
+    link.style.marginTop = '8px';
+    link.style.color = '#555764';
+    link.innerHTML = '<a href="https://www.myfxbook.com/community/outlook" target="_blank" rel="noopener noreferrer" style="color:#555764;text-decoration:none;">Powered by Myfxbook.com</a>';
+    container.current.appendChild(link);
+  }, []);
+  return <div ref={container} style={{ minHeight: 200 }} />;
+}
 
 function App() {
   const [composite, setComposite] = useState(null);
@@ -357,15 +377,11 @@ function App() {
             </div>
             <div className="card">
               <div className="card-header">
-                <h2>Live Sentiment — Dukascopy SWFX</h2>
-                <span className="card-sub">Real-time retail positioning</span>
+                <h2>Live Sentiment — Myfxbook Community Outlook</h2>
+                <span className="card-sub">Real-time retail positioning from live accounts</span>
               </div>
-              <div style={{ width: '100%', overflow: 'hidden' }}>
-                <iframe
-                  title="Dukascopy SWFX Sentiment"
-                  src="https://www.dukascopy.com/plugins/fxMarketWatch/?swfx_index=&availableInstruments=EUR/USD,GBP/USD,USD/JPY,USD/CHF,AUD/USD,NZD/USD,USD/CAD,XAU/USD"
-                  style={{ width: '100%', height: 420, border: 'none' }}
-                />
+              <div className="card-body">
+                <MyfxbookOutlook />
               </div>
             </div>
             <div className="card">
