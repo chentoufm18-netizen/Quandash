@@ -1,29 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import './App.css';
 
 const API = 'https://quandash.onrender.com';
 const REFRESH_MS = 30000;
-
-// Widget Myfxbook Community Outlook — charge le script officiel
-function MyfxbookOutlook() {
-  const container = useRef(null);
-  useEffect(() => {
-    if (!container.current) return;
-    container.current.innerHTML = '';
-    const script = document.createElement('script');
-    script.className = 'powered';
-    script.src = 'https://widgets.myfxbook.com/scripts/fxOutlook.js?type=1&symbols=,1,2,3,4,5,6,7,8,9,10,11,29';
-    container.current.appendChild(script);
-    const link = document.createElement('div');
-    link.style.fontSize = '10px';
-    link.style.marginTop = '8px';
-    link.style.color = '#555764';
-    link.innerHTML = '<a href="https://www.myfxbook.com/community/outlook" target="_blank" rel="noopener noreferrer" style="color:#555764;text-decoration:none;">Powered by Myfxbook.com</a>';
-    container.current.appendChild(link);
-  }, []);
-  return <div ref={container} style={{ minHeight: 200 }} />;
-}
 
 function App() {
   const [composite, setComposite] = useState(null);
@@ -377,11 +357,22 @@ function App() {
             </div>
             <div className="card">
               <div className="card-header">
-                <h2>Live Sentiment — Myfxbook Community Outlook</h2>
-                <span className="card-sub">Real-time retail positioning from live accounts</span>
+                <h2>Live Sentiment — Sources Externes</h2>
+                <span className="card-sub">Cliquez pour voir les données live</span>
               </div>
-              <div className="card-body">
-                <MyfxbookOutlook />
+              <div className="card-body" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <a href="https://www.myfxbook.com/community/outlook" target="_blank" rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: 'var(--blue-bg)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--blue)', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
+                  📊 Myfxbook Community Outlook ↗
+                </a>
+                <a href="https://www.dailyfx.com/sentiment" target="_blank" rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: 'var(--purple-bg)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 8, color: 'var(--purple)', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
+                  📈 DailyFX IG Client Sentiment ↗
+                </a>
+                <a href="https://www.tradingview.com/markets/currencies/sentiment/" target="_blank" rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: 'var(--green-bg)', border: '1px solid var(--green-border)', borderRadius: 8, color: 'var(--green)', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
+                  📉 TradingView Sentiment ↗
+                </a>
               </div>
             </div>
             <div className="card">
