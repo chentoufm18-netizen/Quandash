@@ -1,57 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import './App.css';
 
 const API = 'https://quandash.onrender.com';
 const REFRESH_MS = 30000;
-
-function MyfxbookOutlook() {
-  const container = useRef(null);
-  const [blocked, setBlocked] = useState(false);
-  useEffect(() => {
-    if (!container.current) return;
-    container.current.innerHTML = '';
-    const wrapper = document.createElement('div');
-    wrapper.id = 'myfxbook-outlook-wrapper';
-    container.current.appendChild(wrapper);
-
-    const script = document.createElement('script');
-    script.className = 'powered';
-    script.src = 'https://widgets.myfxbook.com/scripts/fxOutlook.js?type=1&symbols=,1,2,3,4,5,6,7,8,9,10,11,29';
-    script.onerror = () => setBlocked(true);
-    wrapper.appendChild(script);
-
-    // Check after 3s if widget loaded (ad-blocker might silently block)
-    const timer = setTimeout(() => {
-      const w = document.getElementById('myfxbook-outlook-wrapper');
-      if (w && w.children.length <= 1) setBlocked(true);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (blocked) return (
-    <div style={{ padding: 16 }}>
-      <p style={{ color: 'var(--amber)', fontSize: 13, marginBottom: 12 }}>
-        ⚠️ Widget bloqué — votre ad-blocker empêche le chargement du widget Myfxbook.
-      </p>
-      <p style={{ color: 'var(--text-muted)', fontSize: 12, marginBottom: 16 }}>
-        Désactivez votre ad-blocker sur ce site, ou consultez les sources directement :
-      </p>
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        <a href="https://www.myfxbook.com/community/outlook" target="_blank" rel="noopener noreferrer"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: 'var(--blue-bg)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--blue)', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
-          📊 Myfxbook Community Outlook ↗
-        </a>
-        <a href="https://www.dailyfx.com/sentiment" target="_blank" rel="noopener noreferrer"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: 'var(--purple-bg)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 8, color: 'var(--purple)', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
-          📈 DailyFX IG Sentiment ↗
-        </a>
-      </div>
-    </div>
-  );
-
-  return <div ref={container} style={{ minHeight: 200 }} />;
-}
 
 function App() {
   const [composite, setComposite] = useState(null);
@@ -408,9 +360,11 @@ function App() {
                 <h2>Live Sentiment — Myfxbook Community Outlook</h2>
                 <span className="card-sub">Real-time retail positioning from live accounts</span>
               </div>
-              <div className="card-body">
-                <MyfxbookOutlook />
-              </div>
+              <iframe
+                title="Myfxbook Community Outlook"
+                src="/sentiment-widget.html"
+                style={{ width: '100%', height: 500, border: 'none', background: '#151820' }}
+              />
             </div>
             <div className="card">
               <div className="card-header">
